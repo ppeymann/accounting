@@ -1,21 +1,30 @@
-package service
+package services
 
-import "gorm.io/gorm"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/ppeymann/accounting.git"
+	"gorm.io/gorm"
+)
 
 type (
 	// AccountService represents method signatures for api account endpoint.
 	// so any object that stratifying this interface can be used as account service for api endpoint.
-	AccountService struct {
+	AccountService interface {
+		SignUp(input *LoginInputDTO, ctx *gin.Context) accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
 	// so any object that stratifying this interface can be used as account domain repository.
-	AccountRepository struct {
+	AccountRepository interface {
+		SignUp(input *LoginInputDTO) (*AccountEntity, error)
+
+		accounting.BaseRepository
 	}
 
 	// AccountHandler represents method signatures for account handlers.
 	// so any object that stratifying this interface can be used as account handlers.
-	AccountHandler struct {
+	AccountHandler interface {
+		SignUp(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
