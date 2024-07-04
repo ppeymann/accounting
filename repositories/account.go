@@ -1,6 +1,9 @@
 package repositories
 
 import (
+	"strings"
+
+	"github.com/jackc/pgconn"
 	"github.com/ppeymann/accounting.git/services"
 	"gorm.io/gorm"
 )
@@ -19,22 +22,64 @@ func NewAccountRepository(db *gorm.DB, database string) services.AccountReposito
 	}
 }
 
-// SignUp implements services.AccountRepository.
-func (r *repository) SignUp(input *services.LoginInputDTO) (*services.AccountEntity, error) {
-	panic("unimplemented")
+// Create implements services.AccountRepository.
+func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEntity, error) {
+	// make account information with Account Entity
+	account := &services.AccountEntity{
+		Model:    gorm.Model{},
+		UserName: input.UserName,
+		Password: input.Password,
+	}
+
+	// add user name for email OR mobile
+	if strings.Contains(input.UserName, "@") {
+		account.Email = input.UserName
+	} else if strings.Contains(input.UserName, "+98") {
+		account.Mobile = input.UserName
+	}
+
+	// Create account
+	err := r.pg.Transaction(func(tx *gorm.DB) error {
+		if resultErr := r.Model().Create(account).Error; resultErr != nil {
+			str := resultErr.(*pgconn.PgError).Message
+			if strings.Contains(str, "duplicate key value") {
+				return services.ErrAccountExist
+			}
+
+			return resultErr
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
+// Update implements services.AccountRepository.
+func (r *repository) Update(account *services.AccountEntity) error {
+	return r.pg.Save(&account).Error
 }
 
 // Migrate implements services.AccountRepository.
 func (r *repository) Migrate() error {
-	panic("unimplemented")
+	err := r.pg.AutoMigrate(&services.RefreshTokenEntity{})
+	if err != nil {
+		return err
+	}
+
+	return r.pg.AutoMigrate(&services.AccountEntity{})
 }
 
 // Model implements services.AccountRepository.
 func (r *repository) Model() *gorm.DB {
-	panic("unimplemented")
+	return r.pg.Model(&services.AccountEntity{})
 }
 
 // Name implements services.AccountRepository.
 func (r *repository) Name() string {
-	panic("unimplemented")
+	return r.table
 }

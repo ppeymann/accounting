@@ -15,8 +15,7 @@ type (
 	// Claims specify JWT payload claims
 	Claims struct {
 		Subject   uint      `json:"sub"`
-		ID        uint      `json:"jti"`
-		Roles     []string  `json:"roles"`
+		ID        string    `json:"jti"`
 		Issuer    string    `json:"iss"`
 		Audience  string    `json:"aud"`
 		IssuedAt  time.Time `json:"issued_at"`

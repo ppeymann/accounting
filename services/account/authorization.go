@@ -17,6 +17,6 @@ func NewAuthorizationService(service services.AccountService) services.AccountSe
 }
 
 // SignUp implements service.AccountService.
-func (a *authorizationService) SignUp(input *services.LoginInputDTO, ctx *gin.Context) accounting.BaseResult {
-	panic("unimplemented")
+func (a *authorizationService) SignUp(input *services.LoginInputDTO, ctx *gin.Context) *accounting.BaseResult {
+	return a.next.SignUp(input, ctx)
 }

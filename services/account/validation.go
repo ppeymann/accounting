@@ -26,6 +26,11 @@ func NewValidationService(schemaPath string, service services.AccountService) (s
 }
 
 // SignUp implements services.AccountService.
-func (v *validationService) SignUp(input *services.LoginInputDTO, ctx *gin.Context) accounting.BaseResult {
-	panic("unimplemented")
+func (v *validationService) SignUp(input *services.LoginInputDTO, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.SignUp(input, ctx)
 }
