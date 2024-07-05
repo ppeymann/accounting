@@ -21,6 +21,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 	group := s.Router.Group("/api/v1/account")
 	{
 		group.POST("/signup", handler.SignUp)
+		group.POST("/signin", handler.SignIn)
 	}
 
 	return handler
@@ -54,4 +55,32 @@ func (h *handler) SignUp(ctx *gin.Context) {
 	result := h.service.SignUp(input, ctx)
 	ctx.JSON(result.Status, result)
 
+}
+
+// SignIn handles sign in to application http request
+//
+// @BasePath			/api/v1/account/signin
+// @Summary				signing in to account
+// @Description			signing in to account that already signed up
+// @Tags				account
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	services.LoginInputDTO	true	"account info"
+// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Router				/account/signin	[post]
+func (h *handler) SignIn(ctx *gin.Context) {
+	input := &services.LoginInputDTO{}
+
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	// call associated service method expected request
+	result := h.service.SignIn(input, ctx)
+	ctx.JSON(result.Status, result)
 }

@@ -26,9 +26,10 @@ func NewAccountRepository(db *gorm.DB, database string) services.AccountReposito
 func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEntity, error) {
 	// make account information with Account Entity
 	account := &services.AccountEntity{
-		Model:    gorm.Model{},
-		UserName: input.UserName,
-		Password: input.Password,
+		Model:        gorm.Model{},
+		UserName:     input.UserName,
+		Password:     input.Password,
+		CurrencyType: services.Rial,
 	}
 
 	// add user name for email OR mobile
@@ -50,6 +51,18 @@ func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEnt
 		return nil
 	})
 
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
+// Find implements services.AccountRepository.
+func (r *repository) Find(username string) (*services.AccountEntity, error) {
+	account := &services.AccountEntity{}
+
+	err := r.Model().Where("user_name = ?", username).First(account).Error
 	if err != nil {
 		return nil, err
 	}

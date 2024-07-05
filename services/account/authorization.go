@@ -20,3 +20,8 @@ func NewAuthorizationService(service services.AccountService) services.AccountSe
 func (a *authorizationService) SignUp(input *services.LoginInputDTO, ctx *gin.Context) *accounting.BaseResult {
 	return a.next.SignUp(input, ctx)
 }
+
+// SignIn implements services.AccountService.
+func (a *authorizationService) SignIn(input *services.LoginInputDTO, ctx *gin.Context) *accounting.BaseResult {
+	return a.next.SignIn(input, ctx)
+}

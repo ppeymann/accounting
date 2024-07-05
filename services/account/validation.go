@@ -34,3 +34,13 @@ func (v *validationService) SignUp(input *services.LoginInputDTO, ctx *gin.Conte
 
 	return v.next.SignUp(input, ctx)
 }
+
+// SignIn implements services.AccountService.
+func (v *validationService) SignIn(input *services.LoginInputDTO, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.SignIn(input, ctx)
+}

@@ -21,6 +21,9 @@ type (
 	AccountService interface {
 		// SignUp is for sign up in application
 		SignUp(input *LoginInputDTO, ctx *gin.Context) *accounting.BaseResult
+
+		// SignIn is for sign in to application
+		SignIn(input *LoginInputDTO, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
@@ -28,6 +31,9 @@ type (
 	AccountRepository interface {
 		// Create for create a account with username and password
 		Create(input *LoginInputDTO) (*AccountEntity, error)
+
+		// Find is for finding user from DB with username
+		Find(username string) (*AccountEntity, error)
 
 		// Update is for updating account entity
 		Update(account *AccountEntity) error
@@ -40,6 +46,9 @@ type (
 	AccountHandler interface {
 		// SignUp is sign up in application http handler.
 		SignUp(ctx *gin.Context)
+
+		// SignIn is for sign in to application http handler.
+		SignIn(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
@@ -81,10 +90,14 @@ type (
 		// Mobile
 		Mobile string `json:"mobile" gorm:"mobile" mapstructure:"mobile"`
 
+		// FullName
 		FullName string `json:"full_name" gorm:"full_name" mapstructure:"full_name"`
 
 		// Tokens list of current account active session
 		Tokens []RefreshTokenEntity `json:"-" gorm:"foreignKey:AccountID;references:ID"`
+
+		// CurrencyType is currency type between Rial, Dollar, Dinar, ...
+		CurrencyType CurrencyType `json:"currency_type" gorm:"column:"currency_type"`
 	}
 
 	// TokenBundleOutput Contains Token, Refresh Token, Date and Token Expire time for Login/Verify response DTO.
@@ -100,4 +113,16 @@ type (
 		// Expire time of Token and CentrifugeToken
 		Expire time.Time `json:"expire"`
 	}
+
+	CurrencyType string
 )
+
+const (
+	Rial   CurrencyType = "IRT"
+	Dollar CurrencyType = "USD"
+	Euro   CurrencyType = "EUR"
+	Dirham CurrencyType = "AED"
+	Lier   CurrencyType = "TRY"
+)
+
+var AllCurrencyType = []CurrencyType{Rial, Dollar, Euro, Dirham, Lier}
