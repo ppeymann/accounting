@@ -9,7 +9,7 @@
         ],
         "ssl_host": ""
     },
-    "dsn": "host=localhost user=postgres password=Rpjh833u4O925sbLRm dbname=postgres port=5432 sslmode=disable",
+    "dsn": "host=localhost user=postgres password=a2C5BH781173Or3pgLSc dbname=postgres port=5432 sslmode=disable",
     "database":"accounting",
     "jwt": {
         "secret": "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZ",

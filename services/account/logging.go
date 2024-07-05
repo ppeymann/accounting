@@ -27,7 +27,7 @@ func (l *loggingservices) SignUp(input *services.LoginInputDTO, ctx *gin.Context
 	defer func(begin time.Time) {
 		_ = l.logger.Log(
 			"method", "SignUp",
-			"errors", strings.Join(result.Errors, ","),
+			"errors", strings.Join(result.Errors, " ,"),
 			"input", input,
 			"result", result,
 			"client_ip", ctx.ClientIP(),

@@ -4,7 +4,7 @@
     "$protected": false,
     "type": "object",
     "properties": {
-        "username": {
+        "user_name": {
             "type": "string"
         },
         "password": {
@@ -12,7 +12,7 @@
         }
     },
     "required": [
-        "username",
+        "user_name",
         "password"
     ]
 }

@@ -20,7 +20,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 
 	group := s.Router.Group("/api/v1/account")
 	{
-		group.GET("/signup", handler.SignUp)
+		group.POST("/signup", handler.SignUp)
 	}
 
 	return handler

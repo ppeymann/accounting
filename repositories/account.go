@@ -3,7 +3,7 @@ package repositories
 import (
 	"strings"
 
-	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ppeymann/accounting.git/services"
 	"gorm.io/gorm"
 )
@@ -40,15 +40,13 @@ func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEnt
 
 	// Create account
 	err := r.pg.Transaction(func(tx *gorm.DB) error {
-		if resultErr := r.Model().Create(account).Error; resultErr != nil {
-			str := resultErr.(*pgconn.PgError).Message
+		if res := r.Model().Create(account).Error; res != nil {
+			str := res.(*pgconn.PgError).Message
 			if strings.Contains(str, "duplicate key value") {
 				return services.ErrAccountExist
 			}
-
-			return resultErr
+			return res
 		}
-
 		return nil
 	})
 
