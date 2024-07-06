@@ -44,3 +44,13 @@ func (v *validationService) SignIn(input *services.LoginInputDTO, ctx *gin.Conte
 
 	return v.next.SignIn(input, ctx)
 }
+
+// ChangeName implements services.AccountService.
+func (v *validationService) ChangeName(input *services.NameInput, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.ChangeName(input, ctx)
+}

@@ -217,3 +217,28 @@ func (s *service) SignIn(input *services.LoginInputDTO, ctx *gin.Context) *accou
 		},
 	}
 }
+
+// ChangeName implements services.AccountService.
+func (s *service) ChangeName(input *services.NameInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	account, err := s.repo.ChangeName(input.FullName, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: account,
+	}
+}

@@ -75,6 +75,25 @@ func (r *repository) Update(account *services.AccountEntity) error {
 	return r.pg.Save(&account).Error
 }
 
+// ChangeName implements services.AccountRepository.
+func (r *repository) ChangeName(name string, id uint) (*services.AccountEntity, error) {
+	account := &services.AccountEntity{}
+
+	err := r.Model().Where("id = ?", id).First(account).Error
+	if err != nil {
+		return nil, err
+	}
+
+	account.FullName = name
+
+	err = r.pg.Save(account).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
 // Migrate implements services.AccountRepository.
 func (r *repository) Migrate() error {
 	err := r.pg.AutoMigrate(&services.RefreshTokenEntity{})

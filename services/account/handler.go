@@ -22,6 +22,11 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 	{
 		group.POST("/signup", handler.SignUp)
 		group.POST("/signin", handler.SignIn)
+		group.Use(s.Authenticate())
+		{
+			group.PATCH("/change_name", handler.ChangeName)
+
+		}
 	}
 
 	return handler
@@ -82,5 +87,33 @@ func (h *handler) SignIn(ctx *gin.Context) {
 
 	// call associated service method expected request
 	result := h.service.SignIn(input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// ChangeName handles change name http request
+//
+// @BasePath			/api/v1/account/change_name
+// @Summary				change name
+// @Description			change name of account
+// @Tags				account
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	services.NameInput	true	"name that is for change"
+// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Router				/account/change_name	[patch]
+func (h *handler) ChangeName(ctx *gin.Context) {
+	input := &services.NameInput{}
+
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	// call associated service method expected request
+	result := h.service.ChangeName(input, ctx)
 	ctx.JSON(result.Status, result)
 }

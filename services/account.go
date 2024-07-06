@@ -24,6 +24,9 @@ type (
 
 		// SignIn is for sign in to application
 		SignIn(input *LoginInputDTO, ctx *gin.Context) *accounting.BaseResult
+
+		// ChangeName is for changing name that user set
+		ChangeName(input *NameInput, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
@@ -38,6 +41,9 @@ type (
 		// Update is for updating account entity
 		Update(account *AccountEntity) error
 
+		// ChangeName is for changing name that user set
+		ChangeName(name string, id uint) (*AccountEntity, error)
+
 		accounting.BaseRepository
 	}
 
@@ -49,6 +55,9 @@ type (
 
 		// SignIn is for sign in to application http handler.
 		SignIn(ctx *gin.Context)
+
+		// ChangeName is for changing name that user set http request.
+		ChangeName(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
@@ -97,7 +106,7 @@ type (
 		Tokens []RefreshTokenEntity `json:"-" gorm:"foreignKey:AccountID;references:ID"`
 
 		// CurrencyType is currency type between Rial, Dollar, Dinar, ...
-		CurrencyType CurrencyType `json:"currency_type" gorm:"column:"currency_type"`
+		CurrencyType CurrencyType `json:"currency_type" gorm:"column:currency_type"`
 	}
 
 	// TokenBundleOutput Contains Token, Refresh Token, Date and Token Expire time for Login/Verify response DTO.
@@ -112,6 +121,14 @@ type (
 
 		// Expire time of Token and CentrifugeToken
 		Expire time.Time `json:"expire"`
+	}
+
+	// NameInput is DTO for parsing name request params.
+	//
+	// swagger:model NameInput
+	NameInput struct {
+		// FullName
+		FullName string `json:"full_name" gorm:"full_name" mapstructure:"full_name"`
 	}
 
 	CurrencyType string

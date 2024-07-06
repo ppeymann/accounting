@@ -53,3 +53,19 @@ func (l *loggingServices) SignIn(input *services.LoginInputDTO, ctx *gin.Context
 
 	return l.next.SignIn(input, ctx)
 }
+
+// ChangeName implements services.AccountService.
+func (l *loggingServices) ChangeName(input *services.NameInput, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "ChangeName",
+			"errors", strings.Join(result.Errors, " ,"),
+			"input", input,
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.ChangeName(input, ctx)
+}

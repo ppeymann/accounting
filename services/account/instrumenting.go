@@ -42,3 +42,13 @@ func (i *instrumentingServices) SignIn(input *services.LoginInputDTO, ctx *gin.C
 
 	return i.next.SignIn(input, ctx)
 }
+
+// ChangeName implements services.AccountService.
+func (i *instrumentingServices) ChangeName(input *services.NameInput, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "ChangeName").Add(1)
+		i.requestLatency.With("method", "ChangeName").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.ChangeName(input, ctx)
+}
