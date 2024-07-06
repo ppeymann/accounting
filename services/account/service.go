@@ -242,3 +242,28 @@ func (s *service) ChangeName(input *services.NameInput, ctx *gin.Context) *accou
 		Result: account,
 	}
 }
+
+// ChangeCurrency implements services.AccountService.
+func (s *service) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	account, err := s.repo.ChangeCurrency(input.CurrencyType, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: account,
+	}
+}

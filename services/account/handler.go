@@ -25,6 +25,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 		group.Use(s.Authenticate())
 		{
 			group.PATCH("/change_name", handler.ChangeName)
+			group.PATCH("/change_currency", handler.ChangeCurrency)
 
 		}
 	}
@@ -115,5 +116,33 @@ func (h *handler) ChangeName(ctx *gin.Context) {
 
 	// call associated service method expected request
 	result := h.service.ChangeName(input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// ChangeCurrency handles change currency http request
+//
+// @BasePath			/api/v1/account/change_currency
+// @Summary				change currency
+// @Description			change currency of account
+// @Tags				account
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	services.ChangeCurrencyInput	true	"currency that is for change"
+// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Router				/account/change_currency	[patch]
+func (h *handler) ChangeCurrency(ctx *gin.Context) {
+	input := &services.ChangeCurrencyInput{}
+
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	// call associated service method expected request
+	result := h.service.ChangeCurrency(input, ctx)
 	ctx.JSON(result.Status, result)
 }

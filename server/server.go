@@ -47,7 +47,7 @@ func NewServer(logger kitlog.Logger, config *accounting.Configuration) *Server {
 	EnvMode = os.Getenv("GIN_MODE")
 
 	// setting swagger info if not in production mode
-	if env.GetStringDefault("SWAGGER_ENABLE", "false") == "true" {
+	if env.GetStringDefault("SWAGGER_ENABLE", "false") == "false" {
 		docs.SwaggerInfo.Title = fmt.Sprintf("Accounting Backend [ AuthMode: %s ]", "Paseto")
 		docs.SwaggerInfo.Description = "The Swagger Documentation For Accounting Backend API Server"
 		docs.SwaggerInfo.Version = "1.0"
@@ -85,7 +85,7 @@ func (s *Server) Listen() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM)
 	defer stop()
 
-	if env.GetStringDefault("SWAGGER_ENABLE", "false") == "true" {
+	if env.GetStringDefault("SWAGGER_ENABLE", "false") == "false" {
 		s.Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 

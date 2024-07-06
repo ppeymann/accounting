@@ -69,3 +69,19 @@ func (l *loggingServices) ChangeName(input *services.NameInput, ctx *gin.Context
 
 	return l.next.ChangeName(input, ctx)
 }
+
+// ChangeCurrency implements services.AccountService.
+func (l *loggingServices) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "ChangeCurrency",
+			"errors", strings.Join(result.Errors, " ,"),
+			"input", input,
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.ChangeCurrency(input, ctx)
+}

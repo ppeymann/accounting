@@ -54,3 +54,13 @@ func (v *validationService) ChangeName(input *services.NameInput, ctx *gin.Conte
 
 	return v.next.ChangeName(input, ctx)
 }
+
+// ChangeCurrency implements services.AccountService.
+func (v *validationService) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.ChangeCurrency(input, ctx)
+}

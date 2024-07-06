@@ -27,6 +27,9 @@ type (
 
 		// ChangeName is for changing name that user set
 		ChangeName(input *NameInput, ctx *gin.Context) *accounting.BaseResult
+
+		// ChangeCurrency
+		ChangeCurrency(input *ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
@@ -44,6 +47,12 @@ type (
 		// ChangeName is for changing name that user set
 		ChangeName(name string, id uint) (*AccountEntity, error)
 
+		// FindByID is for finding user from DB with id
+		FindByID(id uint) (*AccountEntity, error)
+
+		// ChangeCurrency is for changing currency
+		ChangeCurrency(currency CurrencyType, id uint) (*AccountEntity, error)
+
 		accounting.BaseRepository
 	}
 
@@ -58,6 +67,9 @@ type (
 
 		// ChangeName is for changing name that user set http request.
 		ChangeName(ctx *gin.Context)
+
+		// ChangeCurrency is for changing currency http request
+		ChangeCurrency(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
@@ -131,6 +143,15 @@ type (
 		FullName string `json:"full_name" gorm:"full_name" mapstructure:"full_name"`
 	}
 
+	// ChangeCurrencyInput is DTO for parsing name request params.
+	//
+	// swagger:model ChangeCurrencyInput
+	ChangeCurrencyInput struct {
+		// CurrencyType
+		CurrencyType CurrencyType `json:"currency_type" gorm:"currency_type" mapstructure:"currency_type"`
+	}
+
+	// CurrencyType is currency type between Rial, Dollar, Dinar, ...
 	CurrencyType string
 )
 

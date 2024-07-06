@@ -1,6 +1,8 @@
 package account
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ppeymann/accounting.git"
 	"github.com/ppeymann/accounting.git/auth"
@@ -34,9 +36,24 @@ func (a *authorizationService) ChangeName(input *services.NameInput, ctx *gin.Co
 	err := utils.CatchClaims(ctx, claims)
 	if err != nil {
 		return &accounting.BaseResult{
+			Status: http.StatusOK,
 			Errors: []string{accounting.AuthorizationFailed},
 		}
 	}
 
 	return a.next.ChangeName(input, ctx)
+}
+
+// ChangeCurrency implements services.AccountService.
+func (a *authorizationService) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.ChangeCurrency(input, ctx)
 }

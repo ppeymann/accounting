@@ -77,6 +77,24 @@ func (r *repository) Update(account *services.AccountEntity) error {
 
 // ChangeName implements services.AccountRepository.
 func (r *repository) ChangeName(name string, id uint) (*services.AccountEntity, error) {
+
+	account, err := r.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	account.FullName = name
+
+	err = r.Update(account)
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
+// FindByID implements services.AccountRepository.
+func (r *repository) FindByID(id uint) (*services.AccountEntity, error) {
 	account := &services.AccountEntity{}
 
 	err := r.Model().Where("id = ?", id).First(account).Error
@@ -84,9 +102,19 @@ func (r *repository) ChangeName(name string, id uint) (*services.AccountEntity, 
 		return nil, err
 	}
 
-	account.FullName = name
+	return account, nil
+}
 
-	err = r.pg.Save(account).Error
+// ChangeCurrency implements services.AccountRepository.
+func (r *repository) ChangeCurrency(currency services.CurrencyType, id uint) (*services.AccountEntity, error) {
+	account, err := r.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	account.CurrencyType = currency
+
+	err = r.Update(account)
 	if err != nil {
 		return nil, err
 	}

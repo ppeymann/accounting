@@ -52,3 +52,13 @@ func (i *instrumentingServices) ChangeName(input *services.NameInput, ctx *gin.C
 
 	return i.next.ChangeName(input, ctx)
 }
+
+// ChangeCurrency implements services.AccountService.
+func (i *instrumentingServices) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "ChangeCurrency").Add(1)
+		i.requestLatency.With("method", "ChangeCurrency").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.ChangeCurrency(input, ctx)
+}
