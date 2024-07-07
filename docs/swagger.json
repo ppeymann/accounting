@@ -3,5 +3,213 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/account/change_currency": {
+            "patch": {
+                "description": "change currency of account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "change currency",
+                "parameters": [
+                    {
+                        "description": "currency that is for change",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ChangeCurrencyInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/services.TokenBundleOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/change_name": {
+            "patch": {
+                "description": "change name of account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "change name",
+                "parameters": [
+                    {
+                        "description": "name that is for change",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.NameInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/services.TokenBundleOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/signin": {
+            "post": {
+                "description": "signing in to account that already signed up",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "signing in to account",
+                "parameters": [
+                    {
+                        "description": "account info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.LoginInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/services.TokenBundleOutput"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/signup": {
+            "post": {
+                "description": "create new account with specified mobile and expected info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "signing up a new account",
+                "parameters": [
+                    {
+                        "description": "account info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.LoginInputDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/services.TokenBundleOutput"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "services.ChangeCurrencyInput": {
+            "type": "object",
+            "properties": {
+                "currency_type": {
+                    "description": "CurrencyType",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/services.CurrencyType"
+                        }
+                    ]
+                }
+            }
+        },
+        "services.CurrencyType": {
+            "type": "string",
+            "enum": [
+                "IRT",
+                "USD",
+                "EUR",
+                "AED",
+                "TRY"
+            ],
+            "x-enum-varnames": [
+                "Rial",
+                "Dollar",
+                "Euro",
+                "Dirham",
+                "Lier"
+            ]
+        },
+        "services.LoginInputDTO": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "description": "Password is password for sign up",
+                    "type": "string"
+                },
+                "user_name": {
+                    "description": "Username is user name for sign up",
+                    "type": "string"
+                }
+            }
+        },
+        "services.NameInput": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "description": "FullName",
+                    "type": "string"
+                }
+            }
+        },
+        "services.TokenBundleOutput": {
+            "type": "object",
+            "properties": {
+                "expire": {
+                    "description": "Expire time of Token and CentrifugeToken",
+                    "type": "string"
+                },
+                "refresh": {
+                    "description": "Refresh token string used for refreshing authentication and give fresh token",
+                    "type": "string"
+                },
+                "token": {
+                    "description": "Token is JWT/PASETO token staring for storing in client side as access token",
+                    "type": "string"
+                }
+            }
+        }
+    }
 }

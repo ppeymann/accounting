@@ -1,4 +1,143 @@
+definitions:
+  services.ChangeCurrencyInput:
+    properties:
+      currency_type:
+        allOf:
+        - $ref: '#/definitions/services.CurrencyType'
+        description: CurrencyType
+    type: object
+  services.CurrencyType:
+    enum:
+    - IRT
+    - USD
+    - EUR
+    - AED
+    - TRY
+    type: string
+    x-enum-varnames:
+    - Rial
+    - Dollar
+    - Euro
+    - Dirham
+    - Lier
+  services.LoginInputDTO:
+    properties:
+      password:
+        description: Password is password for sign up
+        type: string
+      user_name:
+        description: Username is user name for sign up
+        type: string
+    type: object
+  services.NameInput:
+    properties:
+      full_name:
+        description: FullName
+        type: string
+    type: object
+  services.TokenBundleOutput:
+    properties:
+      expire:
+        description: Expire time of Token and CentrifugeToken
+        type: string
+      refresh:
+        description: Refresh token string used for refreshing authentication and give
+          fresh token
+        type: string
+      token:
+        description: Token is JWT/PASETO token staring for storing in client side
+          as access token
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /account/change_currency:
+    patch:
+      consumes:
+      - application/json
+      description: change currency of account
+      parameters:
+      - description: currency that is for change
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.ChangeCurrencyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/services.TokenBundleOutput'
+      summary: change currency
+      tags:
+      - account
+  /account/change_name:
+    patch:
+      consumes:
+      - application/json
+      description: change name of account
+      parameters:
+      - description: name that is for change
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.NameInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/services.TokenBundleOutput'
+      summary: change name
+      tags:
+      - account
+  /account/signin:
+    post:
+      consumes:
+      - application/json
+      description: signing in to account that already signed up
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.LoginInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/services.TokenBundleOutput'
+      summary: signing in to account
+      tags:
+      - account
+  /account/signup:
+    post:
+      consumes:
+      - application/json
+      description: create new account with specified mobile and expected info
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.LoginInputDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/services.TokenBundleOutput'
+      summary: signing up a new account
+      tags:
+      - account
 swagger: "2.0"
