@@ -20,6 +20,12 @@ type (
 		// Create creates new bank account in database
 		Create(input *BankAccountInput, accountID uint) (*BankAccountEntity, error)
 
+		// GetBanks get banks information
+		GetBanks() ([]BankEntity, error)
+
+		// Import bank json file information
+		Import(path string) error
+
 		accounting.BaseRepository
 	}
 

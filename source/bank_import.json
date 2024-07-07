@@ -1,0 +1,110 @@
+[
+    {
+        "bank_slug":"toseh_taavon",
+        "name":"توسعه تعاون"
+    },
+    {
+        "bank_slug":"toseh_saderat_iran",
+        "name":"توسعه صادرات ایران"
+    },
+    {
+        "bank_slug":"sepah",
+        "name":"سپه"
+    },
+    {
+        "bank_slug":"sanat_madan",
+        "name":"صنعت و معدن"
+    },
+    {
+        "bank_slug":"keshavarzi",
+        "name":"کشاورزی"
+    },
+    {
+        "bank_slug":"maskan",
+        "name":"مسکن"
+    },
+    {
+        "bank_slug":"meli_iran",
+        "name":"ملّی ایران"
+    },
+    {
+        "bank_slug":"eghtesad_novin",
+        "name":"اقتصاد نوین"
+    },
+    {
+        "bank_slug":"iran_zamin",
+        "name":"ایران زمین"
+    },
+    {
+        "bank_slug":"parsian",
+        "name":"پارسیان"
+    },
+    {
+        "bank_slug":"pasargard",
+        "name":"پاسارگاد"
+    },
+    {
+        "bank_slug":"post_bank_iran",
+        "name":"پست بانک ایران"
+    },
+    {
+        "bank_slug":"tejarat",
+        "name":"تجارت"
+    },
+    {
+        "bank_slug":"khavarmianeh",
+        "name":"خاورمیانه"
+    },
+    {
+        "bank_slug":"dey",
+        "name":"دی"
+    },
+    {
+        "bank_slug":"saman",
+        "name":"سامان"
+    },
+    {
+        "bank_slug":"sarmayeh",
+        "name":"سرمایه"
+    },
+    {
+        "bank_slug":"sina",
+        "name":"سینا"
+    },
+    {
+        "bank_slug":"shahr",
+        "name":"شهر"
+    },
+    {
+        "bank_slug":"saderat",
+        "name":"صادرات"
+    },
+    {
+        "bank_slug":"resalat",
+        "name":"قرض‌الحسنه رسالت"
+    },
+    {
+        "bank_slug":"kar_afarin",
+        "name":"کارآفرین"
+    },
+    {
+        "bank_slug":"gardeshgari",
+        "name":"گردشگری"
+    },
+    {
+        "bank_slug":"melat",
+        "name":"ملت"
+    },
+    {
+        "bank_slug":"ayandeh",
+        "name":"آینده"
+    },
+    {
+        "bank_slug":"mehre_iran",
+        "name":"قرض‌الحسنه مهر ایران"
+    },
+    {
+        "bank_slug":"refah_kargaran",
+        "name":"رفاه کارگران"
+    }
+]

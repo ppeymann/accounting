@@ -22,6 +22,11 @@ func InitBankService(db *gorm.DB, logger kitLog.Logger, config *accounting.Confi
 		log.Fatal(err)
 	}
 
+	err = bankRepo.Import("./source/bank_import.json")
+	if err != nil {
+		log.Println("Err for import bank data: ", err)
+	}
+
 	// bankService create service
 	bankService := bank.NewService(bankRepo)
 

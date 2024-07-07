@@ -1,6 +1,11 @@
 package repositories
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/ppeymann/accounting.git/services"
 	"gorm.io/gorm"
 )
@@ -51,6 +56,70 @@ func (r *bankRepository) Create(input *services.BankAccountInput, accountID uint
 	}
 
 	return bankAccount, nil
+}
+
+// GetBanks implements services.BankRepository.
+func (r *bankRepository) GetBanks() ([]services.BankEntity, error) {
+	var banks []services.BankEntity
+
+	err := r.pg.Model(&services.BankEntity{}).Find(&banks).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return banks, nil
+}
+
+// Import implements services.BankRepository.
+func (r *bankRepository) Import(path string) error {
+	// get banks
+	imports, err := r.GetBanks()
+	if err != nil {
+		return err
+	}
+
+	// already imported
+	if len(imports) > 0 {
+		return nil
+	}
+
+	// open file and read it
+	fp := filepath.Clean(path)
+	data, err := os.ReadFile(fp)
+	if err != nil {
+		return err
+	}
+
+	var source []services.BankEntity
+
+	// decode data
+	err = json.Unmarshal(data, &source)
+	if err != nil {
+		return err
+	}
+
+	// check the data is import or Not
+	if len(source) == 0 {
+		return nil
+	}
+
+	for i, b := range source {
+		bank := services.BankEntity{
+			Model:    gorm.Model{},
+			Name:     b.Name,
+			BankSlug: b.BankSlug,
+		}
+
+		err = r.pg.Model(&services.BankEntity{}).Create(&bank).Error
+		if err != nil {
+			fmt.Println(i, " : ", b.BankSlug, "FAILED")
+			return err
+		}
+
+		fmt.Println(i, " : ", b.BankSlug, "SUCCESS")
+	}
+
+	return nil
 }
 
 // Migrate implements services.BankRepository.
