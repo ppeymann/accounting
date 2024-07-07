@@ -18,4 +18,4 @@
 
 ## update Swagger
 
-    `make swag`
+    `make swagger`

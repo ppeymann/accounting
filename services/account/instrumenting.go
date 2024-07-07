@@ -62,3 +62,13 @@ func (i *instrumentingServices) ChangeCurrency(input *services.ChangeCurrencyInp
 
 	return i.next.ChangeCurrency(input, ctx)
 }
+
+// GetAccount implements services.AccountService.
+func (i *instrumentingServices) GetAccount(ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetAccount").Add(1)
+		i.requestLatency.With("method", "GetAccount").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetAccount(ctx)
+}

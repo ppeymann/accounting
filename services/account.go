@@ -28,8 +28,11 @@ type (
 		// ChangeName is for changing name that user set
 		ChangeName(input *NameInput, ctx *gin.Context) *accounting.BaseResult
 
-		// ChangeCurrency
+		// ChangeCurrency is for changing currency
 		ChangeCurrency(input *ChangeCurrencyInput, ctx *gin.Context) *accounting.BaseResult
+
+		// GetAccount is for getting account
+		GetAccount(ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
@@ -70,6 +73,9 @@ type (
 
 		// ChangeCurrency is for changing currency http request
 		ChangeCurrency(ctx *gin.Context)
+
+		// GetAccount is for getting account http request
+		GetAccount(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
@@ -119,6 +125,8 @@ type (
 
 		// CurrencyType is currency type between Rial, Dollar, Dinar, ...
 		CurrencyType CurrencyType `json:"currency_type" gorm:"column:currency_type"`
+
+		BankAccount []BankAccountEntity `json:"bank_account" gorm:"bank_number;foreignKey:AccountID;references:ID"`
 	}
 
 	// TokenBundleOutput Contains Token, Refresh Token, Date and Token Expire time for Login/Verify response DTO.

@@ -26,6 +26,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 		{
 			group.PATCH("/change_name", handler.ChangeName)
 			group.PATCH("/change_currency", handler.ChangeCurrency)
+			group.GET("", handler.GetAccount)
 
 		}
 	}
@@ -144,5 +145,23 @@ func (h *handler) ChangeCurrency(ctx *gin.Context) {
 
 	// call associated service method expected request
 	result := h.service.ChangeCurrency(input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// GetAccount handles get account http request
+//
+// @BasePath			/api/v1/account
+// @Summary				get account
+// @Description			get account
+// @Tags				account
+// @Accept				json
+// @Produce				json
+//
+// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
+// @Router				/account	[get]
+// @Security			Authenticate Bearer
+func (h *handler) GetAccount(ctx *gin.Context) {
+	// call associated service method expected request
+	result := h.service.GetAccount(ctx)
 	ctx.JSON(result.Status, result)
 }

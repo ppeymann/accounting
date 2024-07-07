@@ -1,4 +1,72 @@
 definitions:
+  accounting.BaseResult:
+    properties:
+      errors:
+        description: Errors provides list off error that occurred in processing request
+        items:
+          type: string
+        type: array
+      result:
+        description: Result single/array of any type (object/number/string/boolean)
+          that returns as response
+      result_count:
+        description: ResultCount specified number of records that returned in result_count
+          field expected result been array.
+        type: integer
+    type: object
+  services.AccountEntity:
+    properties:
+      bank_account:
+        items:
+          $ref: '#/definitions/services.BankAccountEntity'
+        type: array
+      currency_type:
+        allOf:
+        - $ref: '#/definitions/services.CurrencyType'
+        description: CurrencyType is currency type between Rial, Dollar, Dinar, ...
+      email:
+        description: Email
+        type: string
+      full_name:
+        description: FullName
+        type: string
+      mobile:
+        description: Mobile
+        type: string
+      password:
+        description: Password
+        type: string
+      user_name:
+        description: UserName
+        type: string
+    type: object
+  services.BankAccountEntity:
+    properties:
+      account_id:
+        description: AccountID
+        type: integer
+      bank_number:
+        description: BankNumber
+        type: integer
+      bank_slug:
+        description: BankSlug
+        type: string
+      name:
+        description: Name
+        type: string
+    type: object
+  services.BankAccountInput:
+    properties:
+      bank_number:
+        description: BankNumber
+        type: integer
+      bank_slug:
+        description: BankSlug
+        type: string
+      name:
+        description: Name
+        type: string
+    type: object
   services.ChangeCurrencyInput:
     properties:
       currency_type:
@@ -52,6 +120,23 @@ definitions:
 info:
   contact: {}
 paths:
+  /account:
+    get:
+      consumes:
+      - application/json
+      description: get account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/services.AccountEntity'
+      security:
+      - Authenticate Bearer: []
+      summary: get account
+      tags:
+      - account
   /account/change_currency:
     patch:
       consumes:
@@ -70,7 +155,7 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.TokenBundleOutput'
+            $ref: '#/definitions/services.AccountEntity'
       summary: change currency
       tags:
       - account
@@ -92,7 +177,7 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.TokenBundleOutput'
+            $ref: '#/definitions/services.AccountEntity'
       summary: change name
       tags:
       - account
@@ -140,4 +225,28 @@ paths:
       summary: signing up a new account
       tags:
       - account
+  /bank/create:
+    post:
+      consumes:
+      - application/json
+      description: create bank account with specified input
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.BankAccountInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/accounting.BaseResult'
+      security:
+      - Authenticate bearer: []
+      summary: create bank account
+      tags:
+      - bank
 swagger: "2.0"

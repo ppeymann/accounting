@@ -4,6 +4,34 @@
         "contact": {}
     },
     "paths": {
+        "/account": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "get account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "get account",
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/services.AccountEntity"
+                        }
+                    }
+                }
+            }
+        },
         "/account/change_currency": {
             "patch": {
                 "description": "change currency of account",
@@ -32,7 +60,7 @@
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.TokenBundleOutput"
+                            "$ref": "#/definitions/services.AccountEntity"
                         }
                     }
                 }
@@ -66,7 +94,7 @@
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.TokenBundleOutput"
+                            "$ref": "#/definitions/services.AccountEntity"
                         }
                     }
                 }
@@ -139,9 +167,144 @@
                     }
                 }
             }
+        },
+        "/bank/create": {
+            "post": {
+                "security": [
+                    {
+                        "Authenticate bearer": []
+                    }
+                ],
+                "description": "create bank account with specified input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bank"
+                ],
+                "summary": "create bank account",
+                "parameters": [
+                    {
+                        "description": "account info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.BankAccountInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/accounting.BaseResult"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "accounting.BaseResult": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "description": "Errors provides list off error that occurred in processing request",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "result": {
+                    "description": "Result single/array of any type (object/number/string/boolean) that returns as response"
+                },
+                "result_count": {
+                    "description": "ResultCount specified number of records that returned in result_count field expected result been array.",
+                    "type": "integer"
+                }
+            }
+        },
+        "services.AccountEntity": {
+            "type": "object",
+            "properties": {
+                "bank_account": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.BankAccountEntity"
+                    }
+                },
+                "currency_type": {
+                    "description": "CurrencyType is currency type between Rial, Dollar, Dinar, ...",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/services.CurrencyType"
+                        }
+                    ]
+                },
+                "email": {
+                    "description": "Email",
+                    "type": "string"
+                },
+                "full_name": {
+                    "description": "FullName",
+                    "type": "string"
+                },
+                "mobile": {
+                    "description": "Mobile",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "Password",
+                    "type": "string"
+                },
+                "user_name": {
+                    "description": "UserName",
+                    "type": "string"
+                }
+            }
+        },
+        "services.BankAccountEntity": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "description": "AccountID",
+                    "type": "integer"
+                },
+                "bank_number": {
+                    "description": "BankNumber",
+                    "type": "integer"
+                },
+                "bank_slug": {
+                    "description": "BankSlug",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            }
+        },
+        "services.BankAccountInput": {
+            "type": "object",
+            "properties": {
+                "bank_number": {
+                    "description": "BankNumber",
+                    "type": "integer"
+                },
+                "bank_slug": {
+                    "description": "BankSlug",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            }
+        },
         "services.ChangeCurrencyInput": {
             "type": "object",
             "properties": {

@@ -85,3 +85,18 @@ func (l *loggingServices) ChangeCurrency(input *services.ChangeCurrencyInput, ct
 
 	return l.next.ChangeCurrency(input, ctx)
 }
+
+// GetAccount implements services.AccountService.
+func (l *loggingServices) GetAccount(ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetAccount",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetAccount(ctx)
+}

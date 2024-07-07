@@ -40,7 +40,7 @@ type (
 		Name string `json:"name" gorm:"name" mapstructure:"name"`
 
 		// BankNumber
-		BankNumber string `json:"bank_number" gorm:"bank_number" mapstructure:"bank_number"`
+		BankNumber int64 `json:"bank_number" gorm:"bank_number" mapstructure:"bank_number"`
 
 		// AccountID
 		AccountID uint `json:"account_id" gorm:"account_id" mapstructure:"account_id"`
@@ -70,7 +70,7 @@ type (
 		Name string `json:"name" mapstructure:"name"`
 
 		// BankNumber
-		BankNumber string `json:"bank_number" mapstructure:"bank_number"`
+		BankNumber int64 `json:"bank_number" mapstructure:"bank_number"`
 
 		// BankSlug
 		BankSlug string `json:"bank_slug" mapstructure:"bank_slug"`

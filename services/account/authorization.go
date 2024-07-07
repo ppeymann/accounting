@@ -57,3 +57,17 @@ func (a *authorizationService) ChangeCurrency(input *services.ChangeCurrencyInpu
 
 	return a.next.ChangeCurrency(input, ctx)
 }
+
+// GetAccount implements services.AccountService.
+func (a *authorizationService) GetAccount(ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetAccount(ctx)
+}

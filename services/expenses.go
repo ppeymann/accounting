@@ -27,8 +27,20 @@ type (
 		// Amount
 		Amount float64 `json:"amount" gorm:"amount" mapstructure:"amount"`
 
-		// DateAndTime
-		DateAndTime DateAndTime `json:"date_and_time" gorm:"date_and_time" mapstructure:"date_and_time"`
+		// Year is year that this expenses is done
+		Year int `json:"year" gorm:"year" mapstructure:"year"`
+
+		// Month is month that this expenses is done
+		Month int `json:"month" gorm:"month" mapstructure:"month"`
+
+		// Day is day that this expenses is done
+		Day int `json:"day" gorm:"day" mapstructure:"day"`
+
+		// Hour is hour that this expenses is done
+		Hour int `json:"hour" gorm:"hour" mapstructure:"hour"`
+
+		// Minute is minute that this expenses is done
+		Minute int `json:"minute" gorm:"minute" mapstructure:"minute"`
 
 		// Category
 		Category string `json:"category" gorm:"category" mapstructure:"category"`

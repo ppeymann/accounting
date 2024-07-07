@@ -64,3 +64,8 @@ func (v *validationService) ChangeCurrency(input *services.ChangeCurrencyInput, 
 
 	return v.next.ChangeCurrency(input, ctx)
 }
+
+// GetAccount implements services.AccountService.
+func (v *validationService) GetAccount(ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetAccount(ctx)
+}

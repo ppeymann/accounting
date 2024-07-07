@@ -267,3 +267,28 @@ func (s *service) ChangeCurrency(input *services.ChangeCurrencyInput, ctx *gin.C
 		Result: account,
 	}
 }
+
+// GetAccount implements services.AccountService.
+func (s *service) GetAccount(ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	account, err := s.repo.FindByID(claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: account,
+	}
+}
