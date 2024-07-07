@@ -49,8 +49,16 @@ func main() {
 	// Server instance
 	svc := server.NewServer(sl, config)
 
-	// initializing service
+	// --------- initializing service -----------
+
+	// Account
 	pkg.InitAccountService(db, logger, config, svc)
+
+	// Expenses
+	pkg.InitExpensesService(db, logger, config, svc)
+
+	// Bank
+	pkg.InitBankService(db, logger, config, svc)
 
 	// listen and serve...
 	svc.Listen()

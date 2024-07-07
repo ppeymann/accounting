@@ -8,14 +8,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type repository struct {
+type accountRepository struct {
 	pg       *gorm.DB
 	database string
 	table    string
 }
 
 func NewAccountRepository(db *gorm.DB, database string) services.AccountRepository {
-	return &repository{
+	return &accountRepository{
 		pg:       db,
 		database: database,
 		table:    "account_entities",
@@ -23,7 +23,7 @@ func NewAccountRepository(db *gorm.DB, database string) services.AccountReposito
 }
 
 // Create implements services.AccountRepository.
-func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEntity, error) {
+func (r *accountRepository) Create(input *services.LoginInputDTO) (*services.AccountEntity, error) {
 	// make account information with Account Entity
 	account := &services.AccountEntity{
 		Model:        gorm.Model{},
@@ -59,7 +59,7 @@ func (r *repository) Create(input *services.LoginInputDTO) (*services.AccountEnt
 }
 
 // Find implements services.AccountRepository.
-func (r *repository) Find(username string) (*services.AccountEntity, error) {
+func (r *accountRepository) Find(username string) (*services.AccountEntity, error) {
 	account := &services.AccountEntity{}
 
 	err := r.Model().Where("user_name = ?", username).First(account).Error
@@ -71,12 +71,12 @@ func (r *repository) Find(username string) (*services.AccountEntity, error) {
 }
 
 // Update implements services.AccountRepository.
-func (r *repository) Update(account *services.AccountEntity) error {
+func (r *accountRepository) Update(account *services.AccountEntity) error {
 	return r.pg.Save(&account).Error
 }
 
 // ChangeName implements services.AccountRepository.
-func (r *repository) ChangeName(name string, id uint) (*services.AccountEntity, error) {
+func (r *accountRepository) ChangeName(name string, id uint) (*services.AccountEntity, error) {
 
 	account, err := r.FindByID(id)
 	if err != nil {
@@ -94,7 +94,7 @@ func (r *repository) ChangeName(name string, id uint) (*services.AccountEntity, 
 }
 
 // FindByID implements services.AccountRepository.
-func (r *repository) FindByID(id uint) (*services.AccountEntity, error) {
+func (r *accountRepository) FindByID(id uint) (*services.AccountEntity, error) {
 	account := &services.AccountEntity{}
 
 	err := r.Model().Where("id = ?", id).First(account).Error
@@ -106,7 +106,7 @@ func (r *repository) FindByID(id uint) (*services.AccountEntity, error) {
 }
 
 // ChangeCurrency implements services.AccountRepository.
-func (r *repository) ChangeCurrency(currency services.CurrencyType, id uint) (*services.AccountEntity, error) {
+func (r *accountRepository) ChangeCurrency(currency services.CurrencyType, id uint) (*services.AccountEntity, error) {
 	account, err := r.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (r *repository) ChangeCurrency(currency services.CurrencyType, id uint) (*s
 }
 
 // Migrate implements services.AccountRepository.
-func (r *repository) Migrate() error {
+func (r *accountRepository) Migrate() error {
 	err := r.pg.AutoMigrate(&services.RefreshTokenEntity{})
 	if err != nil {
 		return err
@@ -133,11 +133,11 @@ func (r *repository) Migrate() error {
 }
 
 // Model implements services.AccountRepository.
-func (r *repository) Model() *gorm.DB {
+func (r *accountRepository) Model() *gorm.DB {
 	return r.pg.Model(&services.AccountEntity{})
 }
 
 // Name implements services.AccountRepository.
-func (r *repository) Name() string {
+func (r *accountRepository) Name() string {
 	return r.table
 }

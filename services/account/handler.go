@@ -101,7 +101,7 @@ func (h *handler) SignIn(ctx *gin.Context) {
 // @Produce				json
 //
 // @Param				input	body	services.NameInput	true	"name that is for change"
-// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
 // @Router				/account/change_name	[patch]
 func (h *handler) ChangeName(ctx *gin.Context) {
 	input := &services.NameInput{}
@@ -129,7 +129,7 @@ func (h *handler) ChangeName(ctx *gin.Context) {
 // @Produce				json
 //
 // @Param				input	body	services.ChangeCurrencyInput	true	"currency that is for change"
-// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
 // @Router				/account/change_currency	[patch]
 func (h *handler) ChangeCurrency(ctx *gin.Context) {
 	input := &services.ChangeCurrencyInput{}

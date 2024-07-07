@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitExpenses(db *gorm.DB, logger kitLog.Logger, config *accounting.Configuration, server *server.Server) services.ExpensesService {
+func InitExpensesService(db *gorm.DB, logger kitLog.Logger, config *accounting.Configuration, server *server.Server) services.ExpensesService {
 	expensesRepo := repositories.NewExpensesRepository(db, config.Database)
 
 	err := expensesRepo.Migrate()
