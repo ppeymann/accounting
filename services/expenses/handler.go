@@ -1,6 +1,10 @@
 package expenses
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/ppeymann/accounting.git"
 	"github.com/ppeymann/accounting.git/server"
 	"github.com/ppeymann/accounting.git/services"
 )
@@ -14,10 +18,41 @@ func NewHandler(service services.ExpensesService, s *server.Server) services.Exp
 		service: service,
 	}
 
-	_ = s.Router.Group("/api/v1/expenses")
+	group := s.Router.Group("/api/v1/expenses")
 	{
-
+		group.Use(s.Authenticate())
+		{
+			group.POST("/create", handler.Create)
+		}
 	}
 
 	return handler
+}
+
+// Create expenses http request
+//
+// @BasePath			/api/v1/expenses/create
+// @Summary				create expenses
+// @Description			create expenses with expenses input
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	services.ExpensesInput	true	"expenses input"
+// @Success				200		{object}	services.ExpensesEntity		"always returns status 200 but body contains errors"
+// Router				/expenses/create	[post]
+// @Security			Authenticate Bearer
+func (h *handler) Create(ctx *gin.Context) {
+	input := &services.ExpensesInput{}
+
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	result := h.service.Create(input, ctx)
+	ctx.JSON(result.Status, result)
 }

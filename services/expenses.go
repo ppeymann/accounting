@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/ppeymann/accounting.git"
 	"gorm.io/gorm"
 )
@@ -8,17 +9,26 @@ import (
 type (
 	// ExpensesService represents method signatures for api expenses endpoint.
 	// so any object that stratifying this interface can be used as expenses service for api endpoint.
-	ExpensesService interface{}
+	ExpensesService interface {
+		// Create is for create a expenses information
+		Create(input *ExpensesInput, ctx *gin.Context) *accounting.BaseResult
+	}
 
 	// ExpensesRepository represents method signatures for expenses domain repository.
 	// so any object that stratifying this interface can be used as expenses domain repository.
 	ExpensesRepository interface {
+		// Create is for create a expenses information and stored in DB
+		Create(input *ExpensesInput, userID uint) (*ExpensesEntity, error)
+
 		accounting.BaseRepository
 	}
 
 	// ExpensesHandler represents method signatures for expenses handlers.
 	// so any object that stratifying this interface can be used as expenses handlers.
-	ExpensesHandler interface{}
+	ExpensesHandler interface {
+		// Create is for create a expenses information http request
+		Create(ctx *gin.Context)
+	}
 
 	// ExpensesEntity Contains expenses information and entity
 	ExpensesEntity struct {
@@ -46,7 +56,7 @@ type (
 		Category string `json:"category" gorm:"category" mapstructure:"category"`
 
 		// BankNumber
-		BankNumber string `json:"bank_number" gorm:"bank_number" mapstructure:"bank_number"`
+		BankNumber int64 `json:"bank_number" gorm:"bank_number" mapstructure:"bank_number"`
 
 		// BankName
 		BankName string `json:"bank_name" gorm:"bank_name" mapstructure:"bank_name"`
@@ -61,5 +71,14 @@ type (
 		Day    int `json:"day" gorm:"day" mapstructure:"day"`
 		Hour   int `json:"hour" gorm:"hour" mapstructure:"hour"`
 		Minute int `json:"minute" gorm:"minute" mapstructure:"minute"`
+	}
+
+	ExpensesInput struct {
+		Amount     float64     `json:"amount"`
+		Date       DateAndTime `json:"date"`
+		Category   string      `json:"category"`
+		BankNumber int64       `json:"bank_number"`
+		BankName   string      `json:"bank_name"`
+		Note       string      `json:"note"`
 	}
 )

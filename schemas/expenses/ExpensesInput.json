@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "ExpensesInput",
+    "type": "object",
+    "properties": {
+        "amount": {
+            "type":"integer"
+        },
+        "date": {
+            "type": "object",
+            "properties": {
+                "year":{
+                    "type":"integer"
+                },
+                "month":{
+                    "type":"integer"
+                },
+                "day":{
+                    "type":"integer"
+                },
+                "hour":{
+                    "type":"integer"
+                },
+                "minute":{
+                    "type":"integer"
+                }
+            }
+        },
+        "category": {
+            "type": "string",
+            "enum": [
+                "Food",
+                "Transport",
+                "Entertainment",
+                "Health",
+                "Education",
+                "Shopping",
+                "Other"
+            ]
+        },
+        "bank_number":{
+            "type":"integer"
+        },
+        "bank_name":{
+            "type":"string"
+        },
+        "note":{
+            "type":"string"
+        }
+    }
+}

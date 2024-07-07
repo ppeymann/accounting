@@ -374,6 +374,94 @@ const docTemplate = `{
                 "Lier"
             ]
         },
+        "services.DateAndTime": {
+            "type": "object",
+            "properties": {
+                "day": {
+                    "type": "integer"
+                },
+                "hour": {
+                    "type": "integer"
+                },
+                "minute": {
+                    "type": "integer"
+                },
+                "month": {
+                    "type": "integer"
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "services.ExpensesEntity": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "description": "Amount",
+                    "type": "number"
+                },
+                "bank_name": {
+                    "description": "BankName",
+                    "type": "string"
+                },
+                "bank_number": {
+                    "description": "BankNumber",
+                    "type": "integer"
+                },
+                "category": {
+                    "description": "Category",
+                    "type": "string"
+                },
+                "day": {
+                    "description": "Day is day that this expenses is done",
+                    "type": "integer"
+                },
+                "hour": {
+                    "description": "Hour is hour that this expenses is done",
+                    "type": "integer"
+                },
+                "minute": {
+                    "description": "Minute is minute that this expenses is done",
+                    "type": "integer"
+                },
+                "month": {
+                    "description": "Month is month that this expenses is done",
+                    "type": "integer"
+                },
+                "notes": {
+                    "description": "Notes",
+                    "type": "string"
+                },
+                "year": {
+                    "description": "Year is year that this expenses is done",
+                    "type": "integer"
+                }
+            }
+        },
+        "services.ExpensesInput": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "bank_name": {
+                    "type": "string"
+                },
+                "bank_number": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "date": {
+                    "$ref": "#/definitions/services.DateAndTime"
+                },
+                "note": {
+                    "type": "string"
+                }
+            }
+        },
         "services.LoginInputDTO": {
             "type": "object",
             "properties": {
