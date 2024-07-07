@@ -32,3 +32,13 @@ func (i *instrumentingService) Create(input *services.BankAccountInput, ctx *gin
 
 	return i.next.Create(input, ctx)
 }
+
+// GetAllBank implements services.BankService.
+func (i *instrumentingService) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetAllBank").Add(1)
+		i.requestLatency.With("method", "GetAllBank").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetAllBank(ctx)
+}

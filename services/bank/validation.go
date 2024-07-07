@@ -34,3 +34,8 @@ func (v *validationService) Create(input *services.BankAccountInput, ctx *gin.Co
 
 	return v.next.Create(input, ctx)
 }
+
+// GetAllBank implements services.BankService.
+func (v *validationService) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetAllBank(ctx)
+}

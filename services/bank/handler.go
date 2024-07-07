@@ -22,6 +22,7 @@ func NewHandler(service services.BankService, s *server.Server) services.BankHan
 		group.Use(s.Authenticate())
 		{
 			group.POST("/create", handler.Create)
+			group.GET("/all", handler.GetAllBank)
 		}
 	}
 	return handler
@@ -52,5 +53,23 @@ func (h *handler) Create(ctx *gin.Context) {
 
 	// call service
 	result := h.service.Create(input, ctx)
+	ctx.JSON(http.StatusOK, result)
+}
+
+// GetAllBank handles get all bank http request
+//
+// @BasePath			/api/v1/bank/all
+// @Summary				get all bank
+// @Description			get all bank information
+// @Tags				bank
+// @Accept				json
+// @Produce				json
+//
+// @Success				200		{object}	accounting.BaseResult "Always returns status 200 but body contains errors"
+// @Router				/bank/all		[get]
+// @Security			Authenticate bearer
+func (h *handler) GetAllBank(ctx *gin.Context) {
+	// call service
+	result := h.service.GetAllBank(ctx)
 	ctx.JSON(http.StatusOK, result)
 }

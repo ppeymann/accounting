@@ -37,3 +37,19 @@ func (l *loggingService) Create(input *services.BankAccountInput, ctx *gin.Conte
 
 	return l.next.Create(input, ctx)
 }
+
+// GetAllBank implements services.BankService.
+func (l *loggingService) GetAllBank(ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetAllBank",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetAllBank(ctx)
+
+}

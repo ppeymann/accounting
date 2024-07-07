@@ -179,6 +179,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/bank/all": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate bearer": []
+                    }
+                ],
+                "description": "get all bank information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bank"
+                ],
+                "summary": "get all bank",
+                "responses": {
+                    "200": {
+                        "description": "Always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/accounting.BaseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/bank/create": {
             "post": {
                 "security": [

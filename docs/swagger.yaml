@@ -225,6 +225,23 @@ paths:
       summary: signing up a new account
       tags:
       - account
+  /bank/all:
+    get:
+      consumes:
+      - application/json
+      description: get all bank information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/accounting.BaseResult'
+      security:
+      - Authenticate bearer: []
+      summary: get all bank
+      tags:
+      - bank
   /bank/create:
     post:
       consumes:

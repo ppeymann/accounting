@@ -12,6 +12,9 @@ type (
 	BankService interface {
 		// Create creates new bank account
 		Create(input *BankAccountInput, ctx *gin.Context) *accounting.BaseResult
+
+		// GetAllBank is for getting all bank information
+		GetAllBank(ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// BankRepository represents method signatures for bank domain repository.
@@ -34,6 +37,9 @@ type (
 	BankHandler interface {
 		// Create creates new bank account http request.
 		Create(ctx *gin.Context)
+
+		// GetAllBank is for getting all bank information http request.
+		GetAllBank(ctx *gin.Context)
 	}
 
 	// BankEntity Contains bank information and entity

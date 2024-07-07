@@ -44,3 +44,19 @@ func (s *service) Create(input *services.BankAccountInput, ctx *gin.Context) *ac
 		Result: bank,
 	}
 }
+
+// GetAllBank implements services.BankService.
+func (s *service) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
+	bank, err := s.repo.GetBanks()
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: bank,
+	}
+}
