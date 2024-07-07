@@ -56,7 +56,8 @@ func (s *service) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
 	}
 
 	return &accounting.BaseResult{
-		Status: http.StatusOK,
-		Result: bank,
+		Status:      http.StatusOK,
+		Result:      bank,
+		ResultCount: int64(len(bank)),
 	}
 }
