@@ -30,6 +30,7 @@ func NewHandler(service services.ExpensesService, s *server.Server) services.Exp
 			group.DELETE("/:id", handler.DeleteExpenses)
 			group.PUT("/:id", handler.UpdateExpenses)
 			group.GET("/:id", handler.GetByID)
+			group.GET("/by_bank_id/:id", handler.GetByBankAccountID)
 		}
 	}
 
@@ -269,5 +270,32 @@ func (h *handler) GetByID(ctx *gin.Context) {
 	}
 
 	result := h.service.GetByID(uint(id), ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// GetByBankAccountID is for get expenses by bank account id
+//
+// @BasePath			/api/v1/expenses/by_bank_id
+// @Summary				get expenses
+// @Description			get expenses by bank account id
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				id	path		string	true	"bank account id"
+// @Success				200	{object}	accounting.BaseResult{result=[]services.ExpensesEntity}	"always returns status 200 but body contains errors"
+// @Router				/expenses/by_bank_id/{id}	[get]
+// @Security			Authenticate Bearer
+func (h *handler) GetByBankAccountID(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	result := h.service.GetByBankAccountID(uint(id), ctx)
 	ctx.JSON(result.Status, result)
 }

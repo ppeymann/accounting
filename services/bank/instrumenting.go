@@ -52,3 +52,23 @@ func (i *instrumentingService) GetByID(id uint, ctx *gin.Context) *accounting.Ba
 
 	return i.next.GetByID(id, ctx)
 }
+
+// DeleteBankAccount implements services.BankService.
+func (i *instrumentingService) DeleteBankAccount(id uint, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "DeleteBankAccount").Add(1)
+		i.requestLatency.With("method", "DeleteBankAccount").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.DeleteBankAccount(id, ctx)
+}
+
+// UpdateBankAccount implements services.BankService.
+func (i *instrumentingService) UpdateBankAccount(id uint, input *services.BankAccountInput, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "UpdateBankAccount").Add(1)
+		i.requestLatency.With("method", "UpdateBankAccount").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.UpdateBankAccount(id, input, ctx)
+}

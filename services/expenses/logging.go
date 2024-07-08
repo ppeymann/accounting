@@ -134,3 +134,19 @@ func (l *loggingService) GetByID(id uint, ctx *gin.Context) (result *accounting.
 
 	return l.next.GetByID(id, ctx)
 }
+
+// GetByBankAccountID implements services.ExpensesService.
+func (l *loggingService) GetByBankAccountID(bankID uint, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetByBankAccountID",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"bankID", bankID,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetByBankAccountID(bankID, ctx)
+}

@@ -24,6 +24,8 @@ func NewHandler(service services.BankService, s *server.Server) services.BankHan
 			group.POST("/create", handler.Create)
 			group.GET("/all", handler.GetAllBank)
 			group.GET("/by_id/:id", handler.GetByID)
+			group.DELETE("/:id", handler.DeleteBankAccount)
+			group.PUT("/:id", handler.UpdateBankAccount)
 		}
 	}
 	return handler
@@ -77,7 +79,7 @@ func (h *handler) GetAllBank(ctx *gin.Context) {
 
 // GetByID is for get bank by id
 //
-// @BasePath			/api/v1/bank
+// @BasePath			/api/v1/by_id
 // @Summary				get bank
 // @Description			get bank by id
 // @Tags				bank
@@ -86,7 +88,7 @@ func (h *handler) GetAllBank(ctx *gin.Context) {
 //
 // @Param				id	path		string	true	"bank id"
 // @Success				200	{object}	accounting.BaseResult{result=services.BankAccountEntity}	"always returns status 200 but body contains errors"
-// @Router				/bank/{id}	[get]
+// @Router				/by_id/{id}	[get]
 // @Security			Authenticate bearer
 func (h *handler) GetByID(ctx *gin.Context) {
 	id, err := server.GetPathUint64(ctx)
@@ -99,5 +101,69 @@ func (h *handler) GetByID(ctx *gin.Context) {
 	}
 
 	result := h.service.GetByID(uint(id), ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// DeleteBankAccount is for delete bank account
+//
+// @BasePath			/api/v1/bank
+// @Summary				delete bank
+// @Description			delete bank by id
+// @Tags				bank
+// @Accept				json
+// @Produce				json
+//
+// @Param				id	path		string	true	"bank id"
+// @Success				200	{object}	accounting.BaseResult{result=int}	"always returns status 200 but body contains errors"
+// @Router				/bank/{id}	[delete]
+// @Security			Authenticate bearer
+func (h *handler) DeleteBankAccount(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	result := h.service.DeleteBankAccount(uint(id), ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// UpdateBankAccount is for update bank account
+//
+// @BasePath			/api/v1/bank
+// @Summary				update bank
+// @Description			update bank by id
+// @Tags				bank
+// @Accept				json
+// @Produce				json
+//
+// @Param				id		path		string	true	"bank id"
+// @Param				input	body		services.BankAccountInput	true	"account info"
+// @Success				200		{object}	accounting.BaseResult{result=services.BankAccountEntity}	"always returns status 200 but body contains errors"
+// @Router				/bank/{id}	[put]
+// @Security			Authenticate bearer
+func (h *handler) UpdateBankAccount(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	input := &services.BankAccountInput{}
+	if err = ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	result := h.service.UpdateBankAccount(uint(id), input, ctx)
 	ctx.JSON(result.Status, result)
 }

@@ -69,3 +69,8 @@ func (v *validationService) UpdateExpenses(id uint, input *services.ExpensesInpu
 func (v *validationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetByID(id, ctx)
 }
+
+// GetByBankAccountID implements services.ExpensesService.
+func (v *validationService) GetByBankAccountID(bankID uint, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetByBankAccountID(bankID, ctx)
+}

@@ -61,3 +61,31 @@ func (a *authorizationService) GetByID(id uint, ctx *gin.Context) *accounting.Ba
 
 	return a.next.GetByID(id, ctx)
 }
+
+// DeleteBankAccount implements services.BankService.
+func (a *authorizationService) DeleteBankAccount(id uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.DeleteBankAccount(id, ctx)
+}
+
+// UpdateBankAccount implements services.BankService.
+func (a *authorizationService) UpdateBankAccount(id uint, input *services.BankAccountInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.UpdateBankAccount(id, input, ctx)
+}

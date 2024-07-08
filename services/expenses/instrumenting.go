@@ -92,3 +92,13 @@ func (i *instrumentingService) GetByID(id uint, ctx *gin.Context) *accounting.Ba
 
 	return i.next.GetByID(id, ctx)
 }
+
+// GetByBankAccountID implements services.ExpensesService.
+func (i *instrumentingService) GetByBankAccountID(bankID uint, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetByBankAccountID").Add(1)
+		i.requestLatency.With("method", "GetByBankAccountID").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetByBankAccountID(bankID, ctx)
+}

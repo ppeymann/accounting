@@ -3,6 +3,7 @@ package repositories
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -80,6 +81,64 @@ func (r *bankRepository) GetByID(id uint) (*services.BankAccountEntity, error) {
 	}
 
 	return bank, nil
+}
+
+// DeleteBankAccount implements services.BankRepository.
+func (r *bankRepository) DeleteBankAccount(id uint, accountID uint) error {
+	err := r.Model().Where("id = ? AND account_id = ?", id, accountID).Delete(&services.BankAccountEntity{}).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateBankAccount implements services.BankRepository.
+func (r *bankRepository) UpdateBankAccount(id uint, accountID uint, input *services.BankAccountInput) (*services.BankAccountEntity, error) {
+	bank := &services.BankAccountEntity{}
+
+	// get bank information
+	err := r.Model().Where("id = ? AND account_id = ?", id, accountID).First(bank).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// update bank information
+	bank.Name = input.Name
+	bank.BankNumber = input.BankNumber
+	bank.BankSlug = input.BankSlug
+
+	// Update Bank information
+	err = r.Update(bank)
+	if err != nil {
+		return nil, err
+	}
+
+	// get all expenses that belongs to this bank
+	expensesRepo := NewExpensesRepository(r.pg, r.database)
+	exps, err := expensesRepo.GetByBankAccountID(bank.ID, accountID)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// update expenses
+	for _, exp := range exps {
+		exp.BankName = input.Name
+		exp.BankNumber = input.BankNumber
+
+		err = expensesRepo.Update(&exp)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+
+	return bank, nil
+
+}
+
+// Update implements services.BankRepository.
+func (r *bankRepository) Update(bank *services.BankAccountEntity) error {
+	return r.pg.Save(bank).Error
 }
 
 // Import implements services.BankRepository.

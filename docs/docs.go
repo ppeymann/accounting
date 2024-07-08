@@ -334,6 +334,111 @@ const docTemplate = `{
             }
         },
         "/bank/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Authenticate bearer": []
+                    }
+                ],
+                "description": "update bank by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bank"
+                ],
+                "summary": "update bank",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bank id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "account info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.BankAccountInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.BankAccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Authenticate bearer": []
+                    }
+                ],
+                "description": "delete bank by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bank"
+                ],
+                "summary": "delete bank",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bank id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/by_id/{id}": {
             "get": {
                 "security": [
                     {
@@ -373,6 +478,58 @@ const docTemplate = `{
                                     "properties": {
                                         "result": {
                                             "$ref": "#/definitions/services.BankAccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/by_bank_id/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "get expenses by bank account id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "get expenses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bank account id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/services.ExpensesEntity"
+                                            }
                                         }
                                     }
                                 }

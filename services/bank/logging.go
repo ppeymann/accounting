@@ -69,3 +69,36 @@ func (l *loggingService) GetByID(id uint, ctx *gin.Context) (result *accounting.
 
 	return l.next.GetByID(id, ctx)
 }
+
+// DeleteBankAccount implements services.BankService.
+func (l *loggingService) DeleteBankAccount(id uint, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "DeleteBankAccount",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"id", id,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.DeleteBankAccount(id, ctx)
+}
+
+// UpdateBankAccount implements services.BankService.
+func (l *loggingService) UpdateBankAccount(id uint, input *services.BankAccountInput, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "UpdateBankAccount",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"id", id,
+			"input", input,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.UpdateBankAccount(id, input, ctx)
+}

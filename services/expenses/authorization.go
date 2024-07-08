@@ -117,3 +117,17 @@ func (a *authorizationService) GetByID(id uint, ctx *gin.Context) *accounting.Ba
 
 	return a.next.GetByID(id, ctx)
 }
+
+// GetByBankAccountID implements services.ExpensesService.
+func (a *authorizationService) GetByBankAccountID(bankID uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetByBankAccountID(bankID, ctx)
+}

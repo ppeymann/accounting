@@ -77,3 +77,53 @@ func (s *service) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
 		Result: bank,
 	}
 }
+
+// DeleteBankAccount implements services.BankService.
+func (s *service) DeleteBankAccount(id uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	err = s.repo.DeleteBankAccount(id, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: id,
+	}
+}
+
+// UpdateBankAccount implements services.BankService.
+func (s *service) UpdateBankAccount(id uint, input *services.BankAccountInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	bank, err := s.repo.UpdateBankAccount(id, claims.Subject, input)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: bank,
+	}
+}

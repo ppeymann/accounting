@@ -44,3 +44,18 @@ func (v *validationService) GetAllBank(ctx *gin.Context) *accounting.BaseResult 
 func (v *validationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetByID(id, ctx)
 }
+
+// DeleteBankAccount implements services.BankService.
+func (v *validationService) DeleteBankAccount(id uint, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.DeleteBankAccount(id, ctx)
+}
+
+// UpdateBankAccount implements services.BankService.
+func (v *validationService) UpdateBankAccount(id uint, input *services.BankAccountInput, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.UpdateBankAccount(id, input, ctx)
+}

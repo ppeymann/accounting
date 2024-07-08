@@ -18,6 +18,12 @@ type (
 
 		// GetByID get bank information by id
 		GetByID(id uint, ctx *gin.Context) *accounting.BaseResult
+
+		// UpdateBankAccount update bank account
+		UpdateBankAccount(id uint, input *BankAccountInput, ctx *gin.Context) *accounting.BaseResult
+
+		// DeleteBankAccount delete bank account
+		DeleteBankAccount(id uint, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// BankRepository represents method signatures for bank domain repository.
@@ -31,6 +37,15 @@ type (
 
 		// GetByID get bank information by id
 		GetByID(id uint) (*BankAccountEntity, error)
+
+		// UpdateBankAccount update bank account
+		UpdateBankAccount(id, accountID uint, input *BankAccountInput) (*BankAccountEntity, error)
+
+		// DeleteBankAccount delete bank account
+		DeleteBankAccount(id, accountID uint) error
+
+		// Update
+		Update(bank *BankAccountEntity) error
 
 		// Import bank json file information
 		Import(path string) error
@@ -49,6 +64,12 @@ type (
 
 		// GetByID get bank information by id http request.
 		GetByID(ctx *gin.Context)
+
+		// UpdateBankAccount update bank account http request.
+		UpdateBankAccount(ctx *gin.Context)
+
+		// DeleteBankAccount delete bank account http request.
+		DeleteBankAccount(ctx *gin.Context)
 	}
 
 	// BankEntity Contains bank information and entity

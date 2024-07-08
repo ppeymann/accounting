@@ -30,6 +30,9 @@ type (
 
 		// GetByID is for get expenses by id
 		GetByID(id uint, ctx *gin.Context) *accounting.BaseResult
+
+		// GetByBankAccountID is for get expenses by bank account id
+		GetByBankAccountID(bankID uint, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// ExpensesRepository represents method signatures for expenses domain repository.
@@ -59,6 +62,9 @@ type (
 		// Update is for update expenses
 		Update(exp *ExpensesEntity) error
 
+		// GetByBankAccountID is for get expenses by bank account id
+		GetByBankAccountID(bankID uint, accountID uint) ([]ExpensesEntity, error)
+
 		accounting.BaseRepository
 	}
 
@@ -85,6 +91,9 @@ type (
 
 		// GetByID is for get expenses by id http request.
 		GetByID(ctx *gin.Context)
+
+		// GetByBankAccountID is for get expenses by bank account id http request.
+		GetByBankAccountID(ctx *gin.Context)
 	}
 
 	// ExpensesEntity Contains expenses information and entity

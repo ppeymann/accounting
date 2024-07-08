@@ -197,3 +197,28 @@ func (s *service) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
 		Result: exp,
 	}
 }
+
+// GetByBankAccountID implements services.ExpensesService.
+func (s *service) GetByBankAccountID(bankID uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	exp, err := s.repo.GetByBankAccountID(bankID, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: exp,
+	}
+}

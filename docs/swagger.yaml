@@ -329,10 +329,10 @@ paths:
       tags:
       - account
   /bank/{id}:
-    get:
+    delete:
       consumes:
       - application/json
-      description: get bank by id
+      description: delete bank by id
       parameters:
       - description: bank id
         in: path
@@ -349,11 +349,44 @@ paths:
             - $ref: '#/definitions/accounting.BaseResult'
             - properties:
                 result:
+                  type: integer
+              type: object
+      security:
+      - Authenticate bearer: []
+      summary: delete bank
+      tags:
+      - bank
+    put:
+      consumes:
+      - application/json
+      description: update bank by id
+      parameters:
+      - description: bank id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.BankAccountInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
                   $ref: '#/definitions/services.BankAccountEntity'
               type: object
       security:
       - Authenticate bearer: []
-      summary: get bank
+      summary: update bank
       tags:
       - bank
   /bank/all:
@@ -407,6 +440,34 @@ paths:
       security:
       - Authenticate bearer: []
       summary: create bank account
+      tags:
+      - bank
+  /by_id/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get bank by id
+      parameters:
+      - description: bank id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.BankAccountEntity'
+              type: object
+      security:
+      - Authenticate bearer: []
+      summary: get bank
       tags:
       - bank
   /expenses/{id}:
@@ -495,6 +556,36 @@ paths:
       security:
       - Authenticate Bearer: []
       summary: update expenses
+      tags:
+      - expenses
+  /expenses/by_bank_id/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get expenses by bank account id
+      parameters:
+      - description: bank account id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/services.ExpensesEntity'
+                  type: array
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: get expenses
       tags:
       - expenses
   /expenses/create:

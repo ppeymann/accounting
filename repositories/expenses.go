@@ -138,6 +138,18 @@ func (r *expensesRepository) GetByID(id uint, accountID uint) (*services.Expense
 	return exp, nil
 }
 
+// GetByBankAccountID implements services.ExpensesRepository.
+func (r *expensesRepository) GetByBankAccountID(bankID uint, accountID uint) ([]services.ExpensesEntity, error) {
+	var exp []services.ExpensesEntity
+
+	err := r.Model().Where("bank_id = ? AND account_id = ?", bankID, accountID).Find(&exp).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, nil
+}
+
 // Update implements services.ExpensesRepository.
 func (r *expensesRepository) Update(exp *services.ExpensesEntity) error {
 	return r.pg.Save(exp).Error
