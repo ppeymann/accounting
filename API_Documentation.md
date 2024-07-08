@@ -109,6 +109,7 @@
     `/expenses/create`
 
     can create a expenses information
+    *(category must be "Food", "Transport", "Entertainment", "Health", "Education", "Shopping", "Other")
     get: expenses information that made
 
 ## get all expense:
