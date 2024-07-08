@@ -12,6 +12,9 @@ type (
 	ExpensesService interface {
 		// Create is for create a expenses information
 		Create(input *ExpensesInput, ctx *gin.Context) *accounting.BaseResult
+
+		// GetAll is for getting all expenses
+		GetAll(ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// ExpensesRepository represents method signatures for expenses domain repository.
@@ -19,6 +22,9 @@ type (
 	ExpensesRepository interface {
 		// Create is for create a expenses information and stored in DB
 		Create(input *ExpensesInput, userID uint) (*ExpensesEntity, error)
+
+		// GetAll is for getting all expenses from db and send it to service
+		GetAll(account_id uint) ([]ExpensesEntity, error)
 
 		accounting.BaseRepository
 	}
@@ -28,6 +34,9 @@ type (
 	ExpensesHandler interface {
 		// Create is for create a expenses information http request
 		Create(ctx *gin.Context)
+
+		// GetAll is for getting all expenses http request.
+		GetAll(ctx *gin.Context)
 	}
 
 	// ExpensesEntity Contains expenses information and entity
@@ -63,6 +72,8 @@ type (
 
 		// Notes
 		Notes string `json:"notes" gorm:"notes" mapstructure:"notes"`
+
+		AccountID uint `json:"account_id" gorm:"account_id" mapstructure:"account_id"`
 	}
 
 	DateAndTime struct {

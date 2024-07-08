@@ -34,3 +34,8 @@ func (v *validationService) Create(input *services.ExpensesInput, ctx *gin.Conte
 
 	return v.next.Create(input, ctx)
 }
+
+// GetAll implements services.ExpensesService.
+func (v *validationService) GetAll(ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetAll(ctx)
+}

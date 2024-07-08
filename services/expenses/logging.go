@@ -29,10 +29,26 @@ func (l *loggingService) Create(input *services.ExpensesInput, ctx *gin.Context)
 			"method", "Create",
 			"errors", strings.Join(result.Errors, " ,"),
 			"result", result,
+			"input", input,
 			"client_ip", ctx.ClientIP(),
 			"took", time.Since(begin),
 		)
 	}(time.Now())
 
 	return l.next.Create(input, ctx)
+}
+
+// GetAll implements services.ExpensesService.
+func (l *loggingService) GetAll(ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetAll",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetAll(ctx)
 }

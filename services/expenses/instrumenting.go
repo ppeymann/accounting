@@ -32,3 +32,13 @@ func (i *instrumentingService) Create(input *services.ExpensesInput, ctx *gin.Co
 
 	return i.next.Create(input, ctx)
 }
+
+// GetAll implements services.ExpensesService.
+func (i *instrumentingService) GetAll(ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetAll").Add(1)
+		i.requestLatency.With("method", "GetAll").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetAll(ctx)
+}

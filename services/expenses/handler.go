@@ -23,6 +23,7 @@ func NewHandler(service services.ExpensesService, s *server.Server) services.Exp
 		group.Use(s.Authenticate())
 		{
 			group.POST("/create", handler.Create)
+			group.GET("/get_all", handler.GetAll)
 		}
 	}
 
@@ -54,5 +55,24 @@ func (h *handler) Create(ctx *gin.Context) {
 	}
 
 	result := h.service.Create(input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// GetAll is for get all expenses http request
+//
+// @BasePath			/api/v1/expenses/get_all
+// @Summary				get all expenses
+// @Description			get all expenses with specified id
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Success				200		{object}	[]services.ExpensesEntity	"always returns status 200 but body contains errors"
+// @Router				/expenses/get_all
+// @Security			Authenticate Bearer
+func (h *handler) GetAll(ctx *gin.Context) {
+
+	// call service
+	result := h.service.GetAll(ctx)
 	ctx.JSON(result.Status, result)
 }

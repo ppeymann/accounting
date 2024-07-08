@@ -33,6 +33,7 @@ func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) 
 		BankNumber: input.BankNumber,
 		BankName:   input.BankName,
 		Notes:      input.Note,
+		AccountID:  userID,
 	}
 
 	if err := r.Model().Create(expenses).Error; err != nil {
@@ -40,6 +41,18 @@ func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) 
 	}
 
 	return expenses, nil
+}
+
+// GetAll implements services.ExpensesRepository.
+func (r *expensesRepository) GetAll(accountID uint) ([]services.ExpensesEntity, error) {
+	var exp []services.ExpensesEntity
+
+	err := r.Model().Where("account_id = ?", accountID).Find(&exp).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, err
 }
 
 // Migrate implements services.ExpensesRepository.

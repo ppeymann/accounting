@@ -44,3 +44,29 @@ func (s *service) Create(input *services.ExpensesInput, ctx *gin.Context) *accou
 		Result: expenses,
 	}
 }
+
+// GetAll implements services.ExpensesService.
+func (s *service) GetAll(ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	exp, err := s.repo.GetAll(claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status:      http.StatusOK,
+		ResultCount: int64(len(exp)),
+		Result:      exp,
+	}
+}
