@@ -42,3 +42,13 @@ func (i *instrumentingService) GetAllBank(ctx *gin.Context) *accounting.BaseResu
 
 	return i.next.GetAllBank(ctx)
 }
+
+// GetByID implements services.BankService.
+func (i *instrumentingService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetByID").Add(1)
+		i.requestLatency.With("method", "GetByID").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetByID(id, ctx)
+}

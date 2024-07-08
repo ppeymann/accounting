@@ -35,6 +35,7 @@ func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) 
 		BankName:   input.BankName,
 		Notes:      input.Note,
 		AccountID:  userID,
+		BankID:     input.BankID,
 	}
 
 	// create expenses
@@ -114,6 +115,7 @@ func (r *expensesRepository) UpdateExpenses(id uint, input *services.ExpensesInp
 	exp.Day = input.Date.Day
 	exp.Hour = input.Date.Hour
 	exp.Minute = input.Date.Minute
+	exp.BankID = input.BankID
 
 	// update expenses
 	err = r.Update(exp)

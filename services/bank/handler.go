@@ -23,6 +23,7 @@ func NewHandler(service services.BankService, s *server.Server) services.BankHan
 		{
 			group.POST("/create", handler.Create)
 			group.GET("/all", handler.GetAllBank)
+			group.GET("/by_id/:id", handler.GetByID)
 		}
 	}
 	return handler
@@ -72,4 +73,31 @@ func (h *handler) GetAllBank(ctx *gin.Context) {
 	// call service
 	result := h.service.GetAllBank(ctx)
 	ctx.JSON(http.StatusOK, result)
+}
+
+// GetByID is for get bank by id
+//
+// @BasePath			/api/v1/bank
+// @Summary				get bank
+// @Description			get bank by id
+// @Tags				bank
+// @Accept				json
+// @Produce				json
+//
+// @Param				id	path		string	true	"bank id"
+// @Success				200	{object}	accounting.BaseResult{result=services.BankAccountEntity}	"always returns status 200 but body contains errors"
+// @Router				/bank/{id}	[get]
+// @Security			Authenticate bearer
+func (h *handler) GetByID(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	result := h.service.GetByID(uint(id), ctx)
+	ctx.JSON(result.Status, result)
 }

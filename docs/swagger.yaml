@@ -113,10 +113,14 @@ definitions:
   services.ExpensesEntity:
     properties:
       account_id:
+        description: AccountID
         type: integer
       amount:
         description: Amount
         type: number
+      bank_id:
+        description: BankID
+        type: integer
       bank_name:
         description: BankName
         type: string
@@ -149,6 +153,8 @@ definitions:
     properties:
       amount:
         type: number
+      bank_id:
+        type: integer
       bank_name:
         type: string
       bank_number:
@@ -322,6 +328,34 @@ paths:
       summary: signing up a new account
       tags:
       - account
+  /bank/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get bank by id
+      parameters:
+      - description: bank id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.BankAccountEntity'
+              type: object
+      security:
+      - Authenticate bearer: []
+      summary: get bank
+      tags:
+      - bank
   /bank/all:
     get:
       consumes:

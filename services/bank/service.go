@@ -61,3 +61,19 @@ func (s *service) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
 		ResultCount: int64(len(bank)),
 	}
 }
+
+// GetByID implements services.BankService.
+func (s *service) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	bank, err := s.repo.GetByID(id)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: bank,
+	}
+}

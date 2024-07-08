@@ -70,6 +70,18 @@ func (r *bankRepository) GetBanks() ([]services.BankEntity, error) {
 	return banks, nil
 }
 
+// GetByID implements services.BankRepository.
+func (r *bankRepository) GetByID(id uint) (*services.BankAccountEntity, error) {
+	bank := &services.BankAccountEntity{}
+
+	err := r.Model().Where("id = ?", id).First(bank).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return bank, nil
+}
+
 // Import implements services.BankRepository.
 func (r *bankRepository) Import(path string) error {
 	// get banks

@@ -333,6 +333,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/bank/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate bearer": []
+                    }
+                ],
+                "description": "get bank by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bank"
+                ],
+                "summary": "get bank",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bank id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.BankAccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/expenses/create": {
             "post": {
                 "security": [
@@ -871,11 +920,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "account_id": {
+                    "description": "AccountID",
                     "type": "integer"
                 },
                 "amount": {
                     "description": "Amount",
                     "type": "number"
+                },
+                "bank_id": {
+                    "description": "BankID",
+                    "type": "integer"
                 },
                 "bank_name": {
                     "description": "BankName",
@@ -920,6 +974,9 @@ const docTemplate = `{
             "properties": {
                 "amount": {
                     "type": "number"
+                },
+                "bank_id": {
+                    "type": "integer"
                 },
                 "bank_name": {
                     "type": "string"

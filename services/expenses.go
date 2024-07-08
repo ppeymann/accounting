@@ -121,7 +121,11 @@ type (
 		// Notes
 		Notes string `json:"notes" gorm:"notes" mapstructure:"notes"`
 
+		// AccountID
 		AccountID uint `json:"account_id" gorm:"account_id" mapstructure:"account_id"`
+
+		// BankID
+		BankID uint `json:"bank_id" gorm:"bank_id" mapstructure:"bank_id"`
 	}
 
 	DateAndTime struct {
@@ -138,6 +142,7 @@ type (
 		Category   string      `json:"category"`
 		BankNumber int64       `json:"bank_number"`
 		BankName   string      `json:"bank_name"`
+		BankID     uint        `json:"bank_id"`
 		Note       string      `json:"note"`
 	}
 

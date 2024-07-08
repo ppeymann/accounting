@@ -15,6 +15,9 @@ type (
 
 		// GetAllBank is for getting all bank information
 		GetAllBank(ctx *gin.Context) *accounting.BaseResult
+
+		// GetByID get bank information by id
+		GetByID(id uint, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// BankRepository represents method signatures for bank domain repository.
@@ -25,6 +28,9 @@ type (
 
 		// GetBanks get banks information
 		GetBanks() ([]BankEntity, error)
+
+		// GetByID get bank information by id
+		GetByID(id uint) (*BankAccountEntity, error)
 
 		// Import bank json file information
 		Import(path string) error
@@ -40,6 +46,9 @@ type (
 
 		// GetAllBank is for getting all bank information http request.
 		GetAllBank(ctx *gin.Context)
+
+		// GetByID get bank information by id http request.
+		GetByID(ctx *gin.Context)
 	}
 
 	// BankEntity Contains bank information and entity

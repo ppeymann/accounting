@@ -47,3 +47,17 @@ func (a *authorizationService) GetAllBank(ctx *gin.Context) *accounting.BaseResu
 
 	return a.next.GetAllBank(ctx)
 }
+
+// GetByID implements services.BankService.
+func (a *authorizationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetByID(id, ctx)
+}

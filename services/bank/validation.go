@@ -39,3 +39,8 @@ func (v *validationService) Create(input *services.BankAccountInput, ctx *gin.Co
 func (v *validationService) GetAllBank(ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetAllBank(ctx)
 }
+
+// GetByID implements services.BankService.
+func (v *validationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetByID(id, ctx)
+}

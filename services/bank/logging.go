@@ -53,3 +53,19 @@ func (l *loggingService) GetAllBank(ctx *gin.Context) (result *accounting.BaseRe
 	return l.next.GetAllBank(ctx)
 
 }
+
+// GetByID implements services.BankService.
+func (l *loggingService) GetByID(id uint, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetByID",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"id", id,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetByID(id, ctx)
+}
