@@ -16,6 +16,6 @@
 
     `make compose`
 
-## update Swagger
+## swagger view
 
-    `make swagger`
+    `http://localhost:8080/swagger/index.html`
