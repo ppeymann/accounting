@@ -26,6 +26,10 @@ func NewHandler(service services.ExpensesService, s *server.Server) services.Exp
 			group.POST("/create", handler.Create)
 			group.GET("/get_all", handler.GetAll)
 			group.GET("/get_period_time", handler.GetPeriodTime)
+			group.GET("/get_in_month/:year/:month", handler.GetInMonth)
+			group.DELETE("/:id", handler.DeleteExpenses)
+			group.PUT("/:id", handler.UpdateExpenses)
+			group.GET("/:id", handler.GetByID)
 		}
 	}
 
@@ -88,10 +92,10 @@ func (h *handler) GetAll(ctx *gin.Context) {
 // @Accept				json
 // @Produce				json
 //
-// @Param				fromYear	query	int	true	"start year"
-// @Param				fromMonth	query	int	true	"start month"
-// @Param				toYear		query	int	true	"end year"
-// @Param				toMonth		query	int	true	"end month"
+// @Param				fromYear	query	string	true	"start year"
+// @Param				fromMonth	query	string	true	"start month"
+// @Param				toYear		query	string	true	"end year"
+// @Param				toMonth		query	string	true	"end month"
 // @Success				200		{object}	accounting.BaseResult{result=[]services.ExpensesEntity}	"always returns status 200 but body contains errors"
 // @Router				/expenses/get_period_time	[get]
 // @Security			Authenticate Bearer
@@ -145,5 +149,125 @@ func (h *handler) GetPeriodTime(ctx *gin.Context) {
 	}
 
 	result := h.service.GetPeriodTime(input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// GetInMonth is for get expenses in the specified month
+//
+// @BasePath			/api/v1/expenses/get_in_month
+// @Summary				get expenses
+// @Description			get expenses in the specified month
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				year	path	string	true	"year"
+// @Param				month	path	string	true	"month"
+// @Success				200		{object}	accounting.BaseResult{result=[]services.ExpensesEntity}	"always returns status 200 but body contains errors"
+// @Router				/expenses/get_in_month/{year}/{month}	[get]
+func (h *handler) GetInMonth(ctx *gin.Context) {
+	year, err := server.GetInt64Path("year", ctx)
+	if err != nil {
+		return
+	}
+
+	month, err := server.GetInt64Path("month", ctx)
+	if err != nil {
+		return
+	}
+
+	result := h.service.GetInMonth(int(year), int(month), ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// DeleteExpenses is for delete expenses
+//
+// @BasePath			/api/v1/expenses
+// @Summary				delete expenses
+// @Description			delete expenses
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				id	path		string	true	"expenses id"
+// @Success				200	{object}	accounting.BaseResult{result=int}	"always returns status 200 but body contains errors"
+// @Router				/expenses/{id}	[delete]
+// @Security			Authenticate Bearer
+func (h *handler) DeleteExpenses(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	result := h.service.DeleteExpenses(uint(id), ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// UpdateExpenses is for update expenses
+//
+// @BasePath			/api/v1/expenses
+// @Summary				update expenses
+// @Description			update expenses
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				id		path		string	true	"expenses id"
+// @Param				input	body		services.ExpensesInput	true	"expenses input"
+// @Success				200		{object}	accounting.BaseResult{result=services.ExpensesEntity}	"always returns status 200 but body contains errors"
+// @Router				/expenses/{id}	[put]
+// @Security			Authenticate Bearer
+func (h *handler) UpdateExpenses(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	input := &services.ExpensesInput{}
+
+	if err = ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	result := h.service.UpdateExpenses(uint(id), input, ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// GetByID is for get expenses by id
+//
+// @BasePath			/api/v1/expenses
+// @Summary				get expenses
+// @Description			get expenses by id
+// @Tags				expenses
+// @Accept				json
+// @Produce				json
+//
+// @Param				id	path		string	true	"expenses id"
+// @Success				200	{object}	accounting.BaseResult{result=services.ExpensesEntity}	"always returns status 200 but body contains errors"
+// @Router				/expenses/{id}	[get]
+// @Security			Authenticate Bearer
+func (h *handler) GetByID(ctx *gin.Context) {
+	id, err := server.GetPathUint64(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{err.Error()},
+		})
+
+		return
+	}
+
+	result := h.service.GetByID(uint(id), ctx)
 	ctx.JSON(result.Status, result)
 }

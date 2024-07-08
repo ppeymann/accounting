@@ -61,3 +61,59 @@ func (a *authorizationService) GetPeriodTime(input *services.PeriodTimeInput, ct
 
 	return a.next.GetPeriodTime(input, ctx)
 }
+
+// GetInMonth implements services.ExpensesService.
+func (a *authorizationService) GetInMonth(year int, month int, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetInMonth(year, month, ctx)
+}
+
+// DeleteExpenses implements services.ExpensesService.
+func (a *authorizationService) DeleteExpenses(id uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.DeleteExpenses(id, ctx)
+}
+
+// UpdateExpenses implements services.ExpensesService.
+func (a *authorizationService) UpdateExpenses(id uint, input *services.ExpensesInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.UpdateExpenses(id, input, ctx)
+}
+
+// GetByID implements services.ExpensesService.
+func (a *authorizationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetByID(id, ctx)
+}

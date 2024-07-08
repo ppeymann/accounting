@@ -44,3 +44,28 @@ func (v *validationService) GetAll(ctx *gin.Context) *accounting.BaseResult {
 func (v *validationService) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetPeriodTime(input, ctx)
 }
+
+// GetInMonth implements services.ExpensesService.
+func (v *validationService) GetInMonth(year int, month int, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetInMonth(year, month, ctx)
+}
+
+// DeleteExpenses implements services.ExpensesService.
+func (v *validationService) DeleteExpenses(id uint, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.DeleteExpenses(id, ctx)
+}
+
+// UpdateExpenses implements services.ExpensesService.
+func (v *validationService) UpdateExpenses(id uint, input *services.ExpensesInput, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.UpdateExpenses(id, input, ctx)
+}
+
+// GetByID implements services.ExpensesService.
+func (v *validationService) GetByID(id uint, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetByID(id, ctx)
+}

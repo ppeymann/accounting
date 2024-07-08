@@ -18,6 +18,18 @@ type (
 
 		// GetPeriodTime is for get expenses in the period of time
 		GetPeriodTime(input *PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult
+
+		// GetInMonth is for get expenses in the specified month
+		GetInMonth(year int, month int, ctx *gin.Context) *accounting.BaseResult
+
+		// DeleteExpenses is for deleting a expenses
+		DeleteExpenses(id uint, ctx *gin.Context) *accounting.BaseResult
+
+		// UpdateExpenses
+		UpdateExpenses(id uint, input *ExpensesInput, ctx *gin.Context) *accounting.BaseResult
+
+		// GetByID is for get expenses by id
+		GetByID(id uint, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// ExpensesRepository represents method signatures for expenses domain repository.
@@ -31,6 +43,21 @@ type (
 
 		// GetPeriodTime is for get expenses in the period of time
 		GetPeriodTime(input *PeriodTimeInput, accountID uint) ([]ExpensesEntity, error)
+
+		// GetInMonth is for get expenses in the specified month
+		GetInMonth(year int, month int, accountID uint) ([]ExpensesEntity, error)
+
+		// DeleteExpenses is for deleting a expenses from database
+		DeleteExpenses(id uint, accountID uint) (*uint, error)
+
+		// UpdateExpenses
+		UpdateExpenses(id uint, input *ExpensesInput, accountID uint) (*ExpensesEntity, error)
+
+		// GetByID is for get expenses by id
+		GetByID(id uint, accountID uint) (*ExpensesEntity, error)
+
+		// Update is for update expenses
+		Update(exp *ExpensesEntity) error
 
 		accounting.BaseRepository
 	}
@@ -46,6 +73,18 @@ type (
 
 		// GetPeriodTime is for get expenses in the period of time http request.
 		GetPeriodTime(ctx *gin.Context)
+
+		// GetInMonth is for get expenses in the specified month http request.
+		GetInMonth(ctx *gin.Context)
+
+		// DeleteExpenses is for deleting expenses http request.
+		DeleteExpenses(ctx *gin.Context)
+
+		// UpdateExpenses
+		UpdateExpenses(ctx *gin.Context)
+
+		// GetByID is for get expenses by id http request.
+		GetByID(ctx *gin.Context)
 	}
 
 	// ExpensesEntity Contains expenses information and entity

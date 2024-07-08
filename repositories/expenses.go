@@ -21,6 +21,7 @@ func NewExpensesRepository(db *gorm.DB, database string) services.ExpensesReposi
 
 // Create implements services.ExpensesRepository.
 func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) (*services.ExpensesEntity, error) {
+	// create expenses structure
 	expenses := &services.ExpensesEntity{
 		Model:      gorm.Model{},
 		Amount:     input.Amount,
@@ -36,6 +37,7 @@ func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) 
 		AccountID:  userID,
 	}
 
+	// create expenses
 	if err := r.Model().Create(expenses).Error; err != nil {
 		return nil, err
 	}
@@ -59,12 +61,84 @@ func (r *expensesRepository) GetAll(accountID uint) ([]services.ExpensesEntity, 
 func (r *expensesRepository) GetPeriodTime(input *services.PeriodTimeInput, accountID uint) ([]services.ExpensesEntity, error) {
 	var exp []services.ExpensesEntity
 
+	// get expenses from input that have from and to properties and each one has year and month
 	err := r.Model().Where("account_id = ? AND month >= ? AND month <= ? AND year >= ? AND year <= ?", accountID, input.From.Month, input.To.Month, input.From.Year, input.To.Year).Find(&exp).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return exp, nil
+}
+
+// GetInMonth implements services.ExpensesRepository.
+func (r *expensesRepository) GetInMonth(year int, month int, accountID uint) ([]services.ExpensesEntity, error) {
+	var exp []services.ExpensesEntity
+
+	// get expenses with specified month and year
+	err := r.Model().Where("account_id = ? AND month = ? AND year = ?", accountID, month, year).Find(&exp).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, nil
+}
+
+// DeleteExpenses implements services.ExpensesRepository.
+func (r *expensesRepository) DeleteExpenses(id uint, accountID uint) (*uint, error) {
+	// delete expenses and return id
+	err := r.Model().Where("id = ? AND account_id = ?", id, accountID).Delete(&services.ExpensesEntity{}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &id, nil
+}
+
+// UpdateExpenses implements services.ExpensesRepository.
+func (r *expensesRepository) UpdateExpenses(id uint, input *services.ExpensesInput, accountID uint) (*services.ExpensesEntity, error) {
+
+	// get expenses with id and account id
+	exp, err := r.GetByID(id, accountID)
+	if err != nil {
+		return nil, err
+	}
+
+	// update expenses information
+	exp.Amount = input.Amount
+	exp.Category = input.Category
+	exp.BankNumber = input.BankNumber
+	exp.BankName = input.BankName
+	exp.Notes = input.Note
+	exp.Year = input.Date.Year
+	exp.Month = input.Date.Month
+	exp.Day = input.Date.Day
+	exp.Hour = input.Date.Hour
+	exp.Minute = input.Date.Minute
+
+	// update expenses
+	err = r.Update(exp)
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, nil
+}
+
+// GetByID implements services.ExpensesRepository.
+func (r *expensesRepository) GetByID(id uint, accountID uint) (*services.ExpensesEntity, error) {
+	exp := &services.ExpensesEntity{}
+
+	err := r.Model().Where("id = ? AND account_id = ?", id, accountID).First(exp).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, nil
+}
+
+// Update implements services.ExpensesRepository.
+func (r *expensesRepository) Update(exp *services.ExpensesEntity) error {
+	return r.pg.Save(exp).Error
 }
 
 // Migrate implements services.ExpensesRepository.

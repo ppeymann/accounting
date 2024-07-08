@@ -375,6 +375,94 @@ paths:
       summary: create bank account
       tags:
       - bank
+  /expenses/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete expenses
+      parameters:
+      - description: expenses id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  type: integer
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: delete expenses
+      tags:
+      - expenses
+    get:
+      consumes:
+      - application/json
+      description: get expenses by id
+      parameters:
+      - description: expenses id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.ExpensesEntity'
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: get expenses
+      tags:
+      - expenses
+    put:
+      consumes:
+      - application/json
+      description: update expenses
+      parameters:
+      - description: expenses id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: expenses input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.ExpensesInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.ExpensesEntity'
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: update expenses
+      tags:
+      - expenses
   /expenses/create:
     post:
       consumes:
@@ -428,6 +516,39 @@ paths:
       summary: get all expenses
       tags:
       - expenses
+  /expenses/get_in_month/{year}/{month}:
+    get:
+      consumes:
+      - application/json
+      description: get expenses in the specified month
+      parameters:
+      - description: year
+        in: path
+        name: year
+        required: true
+        type: string
+      - description: month
+        in: path
+        name: month
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/services.ExpensesEntity'
+                  type: array
+              type: object
+      summary: get expenses
+      tags:
+      - expenses
   /expenses/get_period_time:
     get:
       consumes:
@@ -438,22 +559,22 @@ paths:
         in: query
         name: fromYear
         required: true
-        type: integer
+        type: string
       - description: start month
         in: query
         name: fromMonth
         required: true
-        type: integer
+        type: string
       - description: end year
         in: query
         name: toYear
         required: true
-        type: integer
+        type: string
       - description: end month
         in: query
         name: toMonth
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
