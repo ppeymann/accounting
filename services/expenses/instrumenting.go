@@ -42,3 +42,13 @@ func (i *instrumentingService) GetAll(ctx *gin.Context) *accounting.BaseResult {
 
 	return i.next.GetAll(ctx)
 }
+
+// GetPeriodTime implements services.ExpensesService.
+func (i *instrumentingService) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "GetPeriodTime").Add(1)
+		i.requestLatency.With("method", "GetPeriodTime").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.GetPeriodTime(input, ctx)
+}

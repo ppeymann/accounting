@@ -428,4 +428,49 @@ paths:
       summary: get all expenses
       tags:
       - expenses
+  /expenses/get_period_time:
+    get:
+      consumes:
+      - application/json
+      description: get expenses in period time
+      parameters:
+      - description: start year
+        in: query
+        name: fromYear
+        required: true
+        type: integer
+      - description: start month
+        in: query
+        name: fromMonth
+        required: true
+        type: integer
+      - description: end year
+        in: query
+        name: toYear
+        required: true
+        type: integer
+      - description: end month
+        in: query
+        name: toMonth
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/services.ExpensesEntity'
+                  type: array
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: get expenses
+      tags:
+      - expenses
 swagger: "2.0"

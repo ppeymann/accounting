@@ -15,6 +15,9 @@ type (
 
 		// GetAll is for getting all expenses
 		GetAll(ctx *gin.Context) *accounting.BaseResult
+
+		// GetPeriodTime is for get expenses in the period of time
+		GetPeriodTime(input *PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// ExpensesRepository represents method signatures for expenses domain repository.
@@ -25,6 +28,9 @@ type (
 
 		// GetAll is for getting all expenses from db and send it to service
 		GetAll(account_id uint) ([]ExpensesEntity, error)
+
+		// GetPeriodTime is for get expenses in the period of time
+		GetPeriodTime(input *PeriodTimeInput, accountID uint) ([]ExpensesEntity, error)
 
 		accounting.BaseRepository
 	}
@@ -37,6 +43,9 @@ type (
 
 		// GetAll is for getting all expenses http request.
 		GetAll(ctx *gin.Context)
+
+		// GetPeriodTime is for get expenses in the period of time http request.
+		GetPeriodTime(ctx *gin.Context)
 	}
 
 	// ExpensesEntity Contains expenses information and entity
@@ -91,5 +100,15 @@ type (
 		BankNumber int64       `json:"bank_number"`
 		BankName   string      `json:"bank_name"`
 		Note       string      `json:"note"`
+	}
+
+	PeriodTimeInput struct {
+		From PeriodDateAndTime `json:"from"`
+		To   PeriodDateAndTime `json:"to"`
+	}
+
+	PeriodDateAndTime struct {
+		Year  int `json:"year" mapstructure:"year"`
+		Month int `json:"month" mapstructure:"month"`
 	}
 )

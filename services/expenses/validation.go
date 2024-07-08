@@ -39,3 +39,8 @@ func (v *validationService) Create(input *services.ExpensesInput, ctx *gin.Conte
 func (v *validationService) GetAll(ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetAll(ctx)
 }
+
+// GetPeriodTime implements services.ExpensesService.
+func (v *validationService) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult {
+	return v.next.GetPeriodTime(input, ctx)
+}

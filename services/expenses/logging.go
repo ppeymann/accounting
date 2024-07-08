@@ -52,3 +52,19 @@ func (l *loggingService) GetAll(ctx *gin.Context) (result *accounting.BaseResult
 
 	return l.next.GetAll(ctx)
 }
+
+// GetPeriodTime implements services.ExpensesService.
+func (l *loggingService) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "GetPeriodTime",
+			"errors", strings.Join(result.Errors, " ,"),
+			"result", result,
+			"input", input,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.GetPeriodTime(input, ctx)
+}

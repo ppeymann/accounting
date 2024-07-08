@@ -47,3 +47,17 @@ func (a *authorizationService) GetAll(ctx *gin.Context) *accounting.BaseResult {
 
 	return a.next.GetAll(ctx)
 }
+
+// GetPeriodTime implements services.ExpensesService.
+func (a *authorizationService) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.GetPeriodTime(input, ctx)
+}

@@ -426,6 +426,79 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/expenses/get_period_time": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "get expenses in period time",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "get expenses",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "start year",
+                        "name": "fromYear",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "start month",
+                        "name": "fromMonth",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "end year",
+                        "name": "toYear",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "end month",
+                        "name": "toMonth",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/services.ExpensesEntity"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -55,6 +55,18 @@ func (r *expensesRepository) GetAll(accountID uint) ([]services.ExpensesEntity, 
 	return exp, err
 }
 
+// GetPeriodTime implements services.ExpensesRepository.
+func (r *expensesRepository) GetPeriodTime(input *services.PeriodTimeInput, accountID uint) ([]services.ExpensesEntity, error) {
+	var exp []services.ExpensesEntity
+
+	err := r.Model().Where("account_id = ? AND month >= ? AND month <= ? AND year >= ? AND year <= ?", accountID, input.From.Month, input.To.Month, input.From.Year, input.To.Year).Find(&exp).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return exp, nil
+}
+
 // Migrate implements services.ExpensesRepository.
 func (r *expensesRepository) Migrate() error {
 	return r.pg.AutoMigrate(&services.ExpensesEntity{})

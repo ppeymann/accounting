@@ -70,3 +70,29 @@ func (s *service) GetAll(ctx *gin.Context) *accounting.BaseResult {
 		Result:      exp,
 	}
 }
+
+// GetPeriodTime implements services.ExpensesService.
+func (s *service) GetPeriodTime(input *services.PeriodTimeInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	exp, err := s.repo.GetPeriodTime(input, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status:      http.StatusOK,
+		ResultCount: int64(len(exp)),
+		Result:      exp,
+	}
+}
