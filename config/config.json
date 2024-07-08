@@ -9,14 +9,14 @@
         ],
         "ssl_host": ""
     },
-    "dsn": "host=localhost user=postgres password=a2C5BH781173Or3pgLSc dbname=postgres port=5432 sslmode=disable",
+    "dsn": "host=localhost user=postgres password=ITegH6d64TBSzs9faJ5Z dbname=postgres port=5432 sslmode=disable",
     "database":"accounting",
     "jwt": {
-        "secret": "TJVA95OrM7E2cBab30RMHrHDcEfxjoYZ",
+        "secret": "gsQWNRSPh8kMWKW6P186f4MRak6NeJqS",
         "token_expire": 43200,
         "refresh_expire": 86400,
-        "issuer": "www.metamedland.com",
-        "audience": "www.metamedland.com",
+        "issuer": "accounting",
+        "audience": "accounting",
         "subject_key": "sub",
         "identity_key": "jti",
         "role_key": "roles"
