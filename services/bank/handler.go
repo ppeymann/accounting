@@ -38,7 +38,7 @@ func NewHandler(service services.BankService, s *server.Server) services.BankHan
 // @Produce				json
 //
 // @Param				input	body		services.BankAccountInput	true	"account info"
-// @Success				200		{object}	accounting.BaseResult "Always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=services.BankAccountEntity} "Always returns status 200 but body contains errors"
 // @Router				/bank/create	[post]
 // @Security			Authenticate bearer
 func (h *handler) Create(ctx *gin.Context) {
@@ -65,7 +65,7 @@ func (h *handler) Create(ctx *gin.Context) {
 // @Accept				json
 // @Produce				json
 //
-// @Success				200		{object}	accounting.BaseResult "Always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=[]services.BankEntity} "Always returns status 200 but body contains errors"
 // @Router				/bank/all		[get]
 // @Security			Authenticate bearer
 func (h *handler) GetAllBank(ctx *gin.Context) {

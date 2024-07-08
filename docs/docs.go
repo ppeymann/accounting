@@ -37,7 +37,19 @@ const docTemplate = `{
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.AccountEntity"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.AccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -71,7 +83,19 @@ const docTemplate = `{
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.AccountEntity"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.AccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -105,7 +129,19 @@ const docTemplate = `{
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.AccountEntity"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.AccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -139,7 +175,19 @@ const docTemplate = `{
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.TokenBundleOutput"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.TokenBundleOutput"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -173,7 +221,19 @@ const docTemplate = `{
                     "200": {
                         "description": "always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/services.TokenBundleOutput"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.TokenBundleOutput"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -201,7 +261,22 @@ const docTemplate = `{
                     "200": {
                         "description": "Always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/accounting.BaseResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/services.BankEntity"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -240,7 +315,113 @@ const docTemplate = `{
                     "200": {
                         "description": "Always returns status 200 but body contains errors",
                         "schema": {
-                            "$ref": "#/definitions/accounting.BaseResult"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.BankAccountEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/create": {
+            "post": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "create expenses with expenses input",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "create expenses",
+                "parameters": [
+                    {
+                        "description": "expenses input",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ExpensesInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/services.ExpensesEntity"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/expenses/get_all": {
+            "get": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "get all expenses with specified id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "expenses"
+                ],
+                "summary": "get all expenses",
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/accounting.BaseResult"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/services.ExpensesEntity"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -344,6 +525,19 @@ const docTemplate = `{
                 }
             }
         },
+        "services.BankEntity": {
+            "type": "object",
+            "properties": {
+                "bank_slug": {
+                    "description": "BankSlug",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                }
+            }
+        },
         "services.ChangeCurrencyInput": {
             "type": "object",
             "properties": {
@@ -397,6 +591,9 @@ const docTemplate = `{
         "services.ExpensesEntity": {
             "type": "object",
             "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
                 "amount": {
                     "description": "Amount",
                     "type": "number"

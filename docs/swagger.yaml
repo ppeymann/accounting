@@ -67,6 +67,15 @@ definitions:
         description: Name
         type: string
     type: object
+  services.BankEntity:
+    properties:
+      bank_slug:
+        description: BankSlug
+        type: string
+      name:
+        description: Name
+        type: string
+    type: object
   services.ChangeCurrencyInput:
     properties:
       currency_type:
@@ -103,6 +112,8 @@ definitions:
     type: object
   services.ExpensesEntity:
     properties:
+      account_id:
+        type: integer
       amount:
         description: Amount
         type: number
@@ -192,7 +203,12 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.AccountEntity'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.AccountEntity'
+              type: object
       security:
       - Authenticate Bearer: []
       summary: get account
@@ -216,7 +232,12 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.AccountEntity'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.AccountEntity'
+              type: object
       summary: change currency
       tags:
       - account
@@ -238,7 +259,12 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.AccountEntity'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.AccountEntity'
+              type: object
       summary: change name
       tags:
       - account
@@ -260,7 +286,12 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.TokenBundleOutput'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.TokenBundleOutput'
+              type: object
       summary: signing in to account
       tags:
       - account
@@ -282,7 +313,12 @@ paths:
         "200":
           description: always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/services.TokenBundleOutput'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.TokenBundleOutput'
+              type: object
       summary: signing up a new account
       tags:
       - account
@@ -297,7 +333,14 @@ paths:
         "200":
           description: Always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/accounting.BaseResult'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/services.BankEntity'
+                  type: array
+              type: object
       security:
       - Authenticate bearer: []
       summary: get all bank
@@ -321,10 +364,68 @@ paths:
         "200":
           description: Always returns status 200 but body contains errors
           schema:
-            $ref: '#/definitions/accounting.BaseResult'
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.BankAccountEntity'
+              type: object
       security:
       - Authenticate bearer: []
       summary: create bank account
       tags:
       - bank
+  /expenses/create:
+    post:
+      consumes:
+      - application/json
+      description: create expenses with expenses input
+      parameters:
+      - description: expenses input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.ExpensesInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  $ref: '#/definitions/services.ExpensesEntity'
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: create expenses
+      tags:
+      - expenses
+  /expenses/get_all:
+    get:
+      consumes:
+      - application/json
+      description: get all expenses with specified id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            allOf:
+            - $ref: '#/definitions/accounting.BaseResult'
+            - properties:
+                result:
+                  items:
+                    $ref: '#/definitions/services.ExpensesEntity'
+                  type: array
+              type: object
+      security:
+      - Authenticate Bearer: []
+      summary: get all expenses
+      tags:
+      - expenses
 swagger: "2.0"

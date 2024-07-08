@@ -44,7 +44,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 // @Produce 		json
 //
 // @Param			input		body		services.LoginInputDTO	true	"account info"
-// @Success 		200 		{object} 	services.TokenBundleOutput		"always returns status 200 but body contains errors"
+// @Success 		200 		{object} 	accounting.BaseResult{result=services.TokenBundleOutput}	"always returns status 200 but body contains errors"
 // @Router 			/account/signup	[post]
 func (h *handler) SignUp(ctx *gin.Context) {
 	input := &services.LoginInputDTO{}
@@ -74,7 +74,7 @@ func (h *handler) SignUp(ctx *gin.Context) {
 // @Produce				json
 //
 // @Param				input	body	services.LoginInputDTO	true	"account info"
-// @Success				200		{object}	services.TokenBundleOutput	"always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=services.TokenBundleOutput}	"always returns status 200 but body contains errors"
 // @Router				/account/signin	[post]
 func (h *handler) SignIn(ctx *gin.Context) {
 	input := &services.LoginInputDTO{}
@@ -102,7 +102,7 @@ func (h *handler) SignIn(ctx *gin.Context) {
 // @Produce				json
 //
 // @Param				input	body	services.NameInput	true	"name that is for change"
-// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=services.AccountEntity}	"always returns status 200 but body contains errors"
 // @Router				/account/change_name	[patch]
 func (h *handler) ChangeName(ctx *gin.Context) {
 	input := &services.NameInput{}
@@ -130,7 +130,7 @@ func (h *handler) ChangeName(ctx *gin.Context) {
 // @Produce				json
 //
 // @Param				input	body	services.ChangeCurrencyInput	true	"currency that is for change"
-// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=services.AccountEntity}	"always returns status 200 but body contains errors"
 // @Router				/account/change_currency	[patch]
 func (h *handler) ChangeCurrency(ctx *gin.Context) {
 	input := &services.ChangeCurrencyInput{}
@@ -157,7 +157,7 @@ func (h *handler) ChangeCurrency(ctx *gin.Context) {
 // @Accept				json
 // @Produce				json
 //
-// @Success				200		{object}	services.AccountEntity	"always returns status 200 but body contains errors"
+// @Success				200		{object}	accounting.BaseResult{result=services.AccountEntity}	"always returns status 200 but body contains errors"
 // @Router				/account	[get]
 // @Security			Authenticate Bearer
 func (h *handler) GetAccount(ctx *gin.Context) {

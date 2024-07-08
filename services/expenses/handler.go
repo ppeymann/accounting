@@ -40,8 +40,8 @@ func NewHandler(service services.ExpensesService, s *server.Server) services.Exp
 // @Produce				json
 //
 // @Param				input	body	services.ExpensesInput	true	"expenses input"
-// @Success				200		{object}	services.ExpensesEntity		"always returns status 200 but body contains errors"
-// Router				/expenses/create	[post]
+// @Success				200		{object}	accounting.BaseResult{result=services.ExpensesEntity}		"always returns status 200 but body contains errors"
+// @Router				/expenses/create	[post]
 // @Security			Authenticate Bearer
 func (h *handler) Create(ctx *gin.Context) {
 	input := &services.ExpensesInput{}
@@ -67,8 +67,8 @@ func (h *handler) Create(ctx *gin.Context) {
 // @Accept				json
 // @Produce				json
 //
-// @Success				200		{object}	[]services.ExpensesEntity	"always returns status 200 but body contains errors"
-// @Router				/expenses/get_all
+// @Success				200		{object}	accounting.BaseResult{result=[]services.ExpensesEntity}	"always returns status 200 but body contains errors"
+// @Router				/expenses/get_all	[get]
 // @Security			Authenticate Bearer
 func (h *handler) GetAll(ctx *gin.Context) {
 
