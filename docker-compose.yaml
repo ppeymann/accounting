@@ -3,12 +3,12 @@ version: "3.8"
 services:
   postgres:
     image: postgres:latest
-    hostname: accounting-postgres
+    hostname: accounting
     container_name: accounting-postgres
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=ITegH6d64TBSzs9faJ5Z
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=XGumWwNXMQDAi78ajGxzBc4p
     ports:
       - "5432:5432"
     volumes:

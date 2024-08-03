@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id":"NameInput",
+    "$protected": false,
+    "type": "object",
+    "properties": {
+        "full_name": {
+            "type" : "string"
+        }
+    },
+    "required": [
+        "full_name"
+    ]
+}

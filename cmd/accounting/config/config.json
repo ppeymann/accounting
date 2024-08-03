@@ -13,8 +13,8 @@
     "database":"accounting",
     "jwt": {
         "secret": "gsQWNRSPh8kMWKW6P186f4MRak6NeJqS",
-        "token_expire": 518400,
-        "refresh_expire": 1036800,
+        "token_expire": 43200,
+        "refresh_expire": 86400,
         "issuer": "accounting",
         "audience": "accounting",
         "subject_key": "sub",

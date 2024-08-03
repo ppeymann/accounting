@@ -97,7 +97,7 @@ func (r *accountRepository) ChangeName(name string, id uint) (*services.AccountE
 func (r *accountRepository) FindByID(id uint) (*services.AccountEntity, error) {
 	account := &services.AccountEntity{}
 
-	err := r.Model().Where("id = ?", id).First(account).Preload("BankAccount").Error
+	err := r.Model().Where("id = ?", id).Preload("BankAccount").First(account).Error
 	if err != nil {
 		return nil, err
 	}

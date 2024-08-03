@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "BankAccountInput",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "bank_number": {
+            "type": "integer",
+            "pattern": "^[0-9]{16}$"
+        },
+        "bank_slug": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "bank_slug"
+    ]
+}

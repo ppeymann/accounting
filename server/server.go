@@ -51,7 +51,7 @@ func NewServer(logger kitlog.Logger, config *accounting.Configuration) *Server {
 		docs.SwaggerInfo.Title = fmt.Sprintf("Accounting Backend [ AuthMode: %s ]", "Paseto")
 		docs.SwaggerInfo.Description = "The Swagger Documentation For Accounting Backend API Server"
 		docs.SwaggerInfo.Version = "1.0"
-		docs.SwaggerInfo.Host = env.GetStringDefault("HOST_URL", "localhost:8000")
+		docs.SwaggerInfo.Host = env.GetStringDefault("HOST_URL", "https://accounting-be.liara.run")
 		docs.SwaggerInfo.BasePath = "/api/v1"
 		docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	}

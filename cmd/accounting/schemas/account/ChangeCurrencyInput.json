@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id":"ChangeCurrencyInput",
+    "$protected": false,
+    "type": "object",
+    "properties": {
+        "currency_type": {
+            "type" : "string",
+            "enum": [
+                "IRT",
+                "USD",
+                "EUR",
+                "AED",
+                "TRY"
+            ]
+        }
+    },
+    "required": [
+        "currency_type"
+    ]
+}
