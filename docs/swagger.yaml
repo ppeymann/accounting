@@ -83,6 +83,15 @@ definitions:
         - $ref: '#/definitions/services.CurrencyType'
         description: CurrencyType
     type: object
+  services.ChangePasswordInput:
+    properties:
+      new_password:
+        description: NewPassword
+        type: string
+      retry_password:
+        description: RetryPassword
+        type: string
+    type: object
   services.CurrencyType:
     enum:
     - IRT
@@ -127,6 +136,9 @@ definitions:
       bank_number:
         description: BankNumber
         type: integer
+      bank_slug:
+        description: BankSlug
+        type: string
       category:
         description: Category
         type: string
@@ -159,6 +171,8 @@ definitions:
         type: string
       bank_number:
         type: integer
+      bank_slug:
+        type: string
       category:
         type: string
       date:
@@ -272,6 +286,30 @@ paths:
                   $ref: '#/definitions/services.AccountEntity'
               type: object
       summary: change name
+      tags:
+      - account
+  /account/change_password:
+    patch:
+      consumes:
+      - application/json
+      description: change password of account
+      parameters:
+      - description: password that is for change
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/services.ChangePasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: always returns status 200 but body contains errors
+          schema:
+            $ref: '#/definitions/accounting.BaseResult'
+      security:
+      - Authenticate Bearer: []
+      summary: change password
       tags:
       - account
   /account/signin:

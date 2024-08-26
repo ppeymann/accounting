@@ -36,6 +36,7 @@ func (r *expensesRepository) Create(input *services.ExpensesInput, userID uint) 
 		Notes:      input.Note,
 		AccountID:  userID,
 		BankID:     input.BankID,
+		BankSlug:   input.BankSlug,
 	}
 
 	// create expenses

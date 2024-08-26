@@ -147,6 +147,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/change_password": {
+            "patch": {
+                "security": [
+                    {
+                        "Authenticate Bearer": []
+                    }
+                ],
+                "description": "change password of account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "change password",
+                "parameters": [
+                    {
+                        "description": "password that is for change",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ChangePasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "always returns status 200 but body contains errors",
+                        "schema": {
+                            "$ref": "#/definitions/accounting.BaseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/account/signin": {
             "post": {
                 "description": "signing in to account that already signed up",
@@ -1036,6 +1075,19 @@ const docTemplate = `{
                 }
             }
         },
+        "services.ChangePasswordInput": {
+            "type": "object",
+            "properties": {
+                "new_password": {
+                    "description": "NewPassword",
+                    "type": "string"
+                },
+                "retry_password": {
+                    "description": "RetryPassword",
+                    "type": "string"
+                }
+            }
+        },
         "services.CurrencyType": {
             "type": "string",
             "enum": [
@@ -1096,6 +1148,10 @@ const docTemplate = `{
                     "description": "BankNumber",
                     "type": "integer"
                 },
+                "bank_slug": {
+                    "description": "BankSlug",
+                    "type": "string"
+                },
                 "category": {
                     "description": "Category",
                     "type": "string"
@@ -1140,6 +1196,9 @@ const docTemplate = `{
                 },
                 "bank_number": {
                     "type": "integer"
+                },
+                "bank_slug": {
+                    "type": "string"
                 },
                 "category": {
                     "type": "string"

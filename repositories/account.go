@@ -122,6 +122,23 @@ func (r *accountRepository) ChangeCurrency(currency services.CurrencyType, id ui
 	return account, nil
 }
 
+// ChangePassword implements services.AccountRepository.
+func (r *accountRepository) ChangePassword(password string, id uint) (*services.AccountEntity, error) {
+	account, err := r.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	account.Password = password
+
+	err = r.Update(account)
+	if err != nil {
+		return nil, err
+	}
+
+	return account, nil
+}
+
 // Migrate implements services.AccountRepository.
 func (r *accountRepository) Migrate() error {
 	err := r.pg.AutoMigrate(&services.RefreshTokenEntity{})

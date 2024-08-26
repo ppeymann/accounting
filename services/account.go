@@ -33,6 +33,9 @@ type (
 
 		// GetAccount is for getting account
 		GetAccount(ctx *gin.Context) *accounting.BaseResult
+
+		// ChangePassword is for change password
+		ChangePassword(input *ChangePasswordInput, ctx *gin.Context) *accounting.BaseResult
 	}
 
 	// AccountRepository represents method signatures for account domain repository.
@@ -56,6 +59,9 @@ type (
 		// ChangeCurrency is for changing currency
 		ChangeCurrency(currency CurrencyType, id uint) (*AccountEntity, error)
 
+		// ChangePassword is for change password
+		ChangePassword(password string, id uint) (*AccountEntity, error)
+
 		accounting.BaseRepository
 	}
 
@@ -76,6 +82,9 @@ type (
 
 		// GetAccount is for getting account http request
 		GetAccount(ctx *gin.Context)
+
+		// ChangePassword is for change password http request
+		ChangePassword(ctx *gin.Context)
 	}
 
 	// LoginInputDTO is DTO for parsing register and sign in request params.
@@ -157,6 +166,17 @@ type (
 	ChangeCurrencyInput struct {
 		// CurrencyType
 		CurrencyType CurrencyType `json:"currency_type" gorm:"currency_type" mapstructure:"currency_type"`
+	}
+
+	// ChangePasswordInput is DTO for parsing password request params.
+	//
+	// swagger:model ChangePasswordInput
+	ChangePasswordInput struct {
+		// NewPassword
+		NewPassword string `json:"new_password" gorm:"new_password" mapstructure:"new_password"`
+
+		// RetryPassword
+		RetryPassword string `json:"retry_password" gorm:"retry_password" mapstructure:"retry_password"`
 	}
 
 	// CurrencyType is currency type between Rial, Dollar, Dinar, ...

@@ -49,6 +49,9 @@
         },
         "bank_id": {
             "type": "integer"
+        },
+        "bank_slug": {
+            "type": "string"
         }
     }
 }

@@ -71,3 +71,17 @@ func (a *authorizationService) GetAccount(ctx *gin.Context) *accounting.BaseResu
 
 	return a.next.GetAccount(ctx)
 }
+
+// ChangePassword implements services.AccountService.
+func (a *authorizationService) ChangePassword(input *services.ChangePasswordInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	return a.next.ChangePassword(input, ctx)
+}

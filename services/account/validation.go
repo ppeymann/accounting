@@ -69,3 +69,13 @@ func (v *validationService) ChangeCurrency(input *services.ChangeCurrencyInput, 
 func (v *validationService) GetAccount(ctx *gin.Context) *accounting.BaseResult {
 	return v.next.GetAccount(ctx)
 }
+
+// ChangePassword implements services.AccountService.
+func (v *validationService) ChangePassword(input *services.ChangePasswordInput, ctx *gin.Context) *accounting.BaseResult {
+	err := validations.Validate(input, v.schemas)
+	if err != nil {
+		return err
+	}
+
+	return v.next.ChangePassword(input, ctx)
+}

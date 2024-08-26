@@ -27,6 +27,7 @@ func NewHandler(svc services.AccountService, s *server.Server) services.AccountH
 			group.PATCH("/change_name", handler.ChangeName)
 			group.PATCH("/change_currency", handler.ChangeCurrency)
 			group.GET("", handler.GetAccount)
+			group.PATCH("/change_password", handler.ChangePassword)
 
 		}
 	}
@@ -163,5 +164,34 @@ func (h *handler) ChangeCurrency(ctx *gin.Context) {
 func (h *handler) GetAccount(ctx *gin.Context) {
 	// call associated service method expected request
 	result := h.service.GetAccount(ctx)
+	ctx.JSON(result.Status, result)
+}
+
+// ChangePassword handles change password http request
+//
+// @BasePath			/api/v1/account/change_password
+// @Summary				change password
+// @Description			change password of account
+// @Tags				account
+// @Accept				json
+// @Produce				json
+//
+// @Param				input	body	services.ChangePasswordInput	true	"password that is for change"
+// @Success				200		{object}	accounting.BaseResult	"always returns status 200 but body contains errors"
+// @Router				/account/change_password	[patch]
+// @Security			Authenticate Bearer
+func (h *handler) ChangePassword(ctx *gin.Context) {
+	input := &services.ChangePasswordInput{}
+
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		ctx.JSON(http.StatusBadRequest, accounting.BaseResult{
+			Errors: []string{accounting.ProvideRequiredJsonBody},
+		})
+
+		return
+	}
+
+	// call associated service method expected request
+	result := h.service.ChangePassword(input, ctx)
 	ctx.JSON(result.Status, result)
 }

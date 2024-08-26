@@ -135,6 +135,9 @@ type (
 
 		// BankID
 		BankID uint `json:"bank_id" gorm:"bank_id" mapstructure:"bank_id"`
+
+		// BankSlug
+		BankSlug string `json:"bank_slug" gorm:"bank_slug" mapstructure:"bank_slug"`
 	}
 
 	DateAndTime struct {
@@ -153,6 +156,7 @@ type (
 		BankName   string      `json:"bank_name"`
 		BankID     uint        `json:"bank_id"`
 		Note       string      `json:"note"`
+		BankSlug   string      `json:"bank_slug"`
 	}
 
 	PeriodTimeInput struct {

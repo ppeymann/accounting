@@ -72,3 +72,13 @@ func (i *instrumentingServices) GetAccount(ctx *gin.Context) *accounting.BaseRes
 
 	return i.next.GetAccount(ctx)
 }
+
+// ChangePassword implements services.AccountService.
+func (i *instrumentingServices) ChangePassword(input *services.ChangePasswordInput, ctx *gin.Context) *accounting.BaseResult {
+	defer func(begin time.Time) {
+		i.requestCounter.With("method", "ChangePassword").Add(1)
+		i.requestLatency.With("method", "ChangePassword").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return i.next.ChangePassword(input, ctx)
+}

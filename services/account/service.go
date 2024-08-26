@@ -292,3 +292,35 @@ func (s *service) GetAccount(ctx *gin.Context) *accounting.BaseResult {
 		Result: account,
 	}
 }
+
+// ChangePassword implements services.AccountService.
+func (s *service) ChangePassword(input *services.ChangePasswordInput, ctx *gin.Context) *accounting.BaseResult {
+	claims := &auth.Claims{}
+	err := utils.CatchClaims(ctx, claims)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{accounting.AuthorizationFailed},
+		}
+	}
+
+	if input.NewPassword != input.RetryPassword {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{"password not match"},
+		}
+	}
+
+	_, err = s.repo.ChangePassword(input.NewPassword, claims.Subject)
+	if err != nil {
+		return &accounting.BaseResult{
+			Status: http.StatusOK,
+			Errors: []string{err.Error()},
+		}
+	}
+
+	return &accounting.BaseResult{
+		Status: http.StatusOK,
+		Result: "success",
+	}
+}

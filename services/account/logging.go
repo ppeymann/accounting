@@ -100,3 +100,19 @@ func (l *loggingServices) GetAccount(ctx *gin.Context) (result *accounting.BaseR
 
 	return l.next.GetAccount(ctx)
 }
+
+// ChangePassword implements services.AccountService.
+func (l *loggingServices) ChangePassword(input *services.ChangePasswordInput, ctx *gin.Context) (result *accounting.BaseResult) {
+	defer func(begin time.Time) {
+		_ = l.logger.Log(
+			"method", "ChangePassword",
+			"errors", strings.Join(result.Errors, " ,"),
+			"input", input,
+			"result", result,
+			"client_ip", ctx.ClientIP(),
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	return l.next.ChangePassword(input, ctx)
+}
